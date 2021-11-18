@@ -1,4 +1,4 @@
-        .title "Periodic Interrupt Timer handler"
+        .title "Periodic Interrupt Timer Interrupt Handler"
 
 #include "FreeRTOSConfig.h"
 
@@ -12,7 +12,7 @@
         .align 2
 
         .type PITInterruptHandler, @function
-        .global PITInterruptHandler
+        .globl PITInterruptHandler
 PITInterruptHandler:
         /* Mask interrupts to the API priority level */
         ori.w   #0x0700, %sr
@@ -24,6 +24,9 @@ PITInterruptHandler:
         move.l  %sp, %a0@
 
         /* Set SP to ISR stack */
+        /* Before uncommenting this line across multiple ISRs, some kind of
+         * synchronisation is required to ensure that the ISR stack is only
+         * configured once for nested interrupts to avoid stack corruption */
         /* movea.l (xISRStackTop), %sp */
         
         /* Tick */
