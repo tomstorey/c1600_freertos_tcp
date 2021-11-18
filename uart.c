@@ -10,9 +10,10 @@
 #define TX_BUFFER_SZ 32768      /* Number of bytes to allocate to the TX buf */
 
 /* Store buffer descriptors in DPRAM - two rx BDs are provided for chaining
- * the reception of large amounts of data. Each BD is 8 bytes in size. */
-static volatile __SMCRxBufferDescriptor_t *rxbd = (void *)(MODULE_BASE+0x400);
-static volatile __SMCTxBufferDescriptor_t *txbd = (void *)(MODULE_BASE+0x410);
+ * the reception of large amounts of data. Each BD is 8 bytes in size. Store
+ * at the very top of User Data area of DPRAM as ethernet BDs will grow up. */
+static volatile __SMCRxBufferDescriptor_t *rxbd = (void *)(DPRBASE+0x5E0);
+static volatile __SMCTxBufferDescriptor_t *txbd = (void *)(DPRBASE+0x5F0);
 
 /* Some working buffers for the UART */
 static volatile uint8_t rx_buffer[256] = {0};
