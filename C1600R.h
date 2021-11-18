@@ -46,7 +46,7 @@
  *                      Cisco Router Specific Registers
  * 
  * The following registers are external to the QUICC and specific to the Cisco
- * router itself.
+ * 1600R router platform itself.
  *****************************************************************************/
 
 #define SYSOPT (*(volatile uint8_t *)(PERIPHERAL_BASE + 0x80000))
@@ -268,7 +268,7 @@ typedef struct {
         };
     } flags;
     uint16_t LEN;
-    uint8_t *DST;
+    void *DST;
 } __SPIRxBufferDescriptor_t;
 
 typedef struct {
@@ -290,7 +290,7 @@ typedef struct {
         };
     } flags;
     uint16_t LEN;
-    uint8_t *SRC;
+    void *SRC;
 } __SPITxBufferDescriptor_t;
 
 typedef struct {
@@ -314,8 +314,8 @@ typedef struct {
         };
     } flags;
     uint32_t LEN;
-    uint8_t *SRC;
-    uint8_t *DST;
+    void *SRC;
+    void *DST;
 } __IDMABufferDescriptor_t;
 
 typedef struct {
@@ -341,7 +341,7 @@ typedef struct {
         };
     } flags;
     uint16_t LEN;
-    uint8_t *DST;
+    void *DST;
 } __SMCRxBufferDescriptor_t;
 
 typedef struct {
@@ -361,7 +361,7 @@ typedef struct {
         };
     } flags;
     uint16_t LEN;
-    uint8_t *SRC;
+    void *SRC;
 } __SMCTxBufferDescriptor_t;
 
 typedef struct {
@@ -389,7 +389,7 @@ typedef struct {
         };
     } flags;
     uint16_t LEN;
-    uint8_t *DST;
+    void *DST;
 } __SCCUARTRxBufferDescriptor_t;
 
 typedef struct {
@@ -412,7 +412,7 @@ typedef struct {
         };
     } flags;
     uint16_t LEN;
-    uint8_t *SRC;
+    void *SRC;
 } __SCCUARTTxBufferDescriptor_t;
 
 
