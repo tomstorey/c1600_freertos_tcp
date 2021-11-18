@@ -27,6 +27,7 @@ OBJ+= FreeRTOS-Plus-TCP/FreeRTOS_Sockets.o FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.o
 OBJ+= FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.o FreeRTOS-Plus-TCP/FreeRTOS_TCP_WIN.o
 OBJ+= FreeRTOS-Plus-TCP/portable/BufferManagement/BufferAllocation_1.o
 OBJ+= FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.o
+OBJ+= FreeRTOS-Plus-TCP/portable/NetworkInterface/C1600-QUICC/SCC3InterruptHandler.o
 OBJ+= FreeRTOS-Plus-TCP/portable/NetworkInterface/C1600-QUICC/NetworkInterface.o
 
 # Specify the CPU type that you are targeting your build towards.
