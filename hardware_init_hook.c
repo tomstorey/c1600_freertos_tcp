@@ -4,21 +4,23 @@
 #include "uart.h"
 
 void init_pll(void);
+void init_ports(void);
 void init_memory_params(void);
-void init_others(void);
 void init_bss_and_data(void);
 void init_zeroise_pram(void);
-void init_final(void);
+void init_others(void);
 
 void
 hardware_init_hook(void)
 {
     /* Initialise all the everythings */
     init_pll();
+    init_ports();
     init_memory_params();
-    init_others();
     init_bss_and_data();
     init_zeroise_pram();
+    init_others();
+
     init_console_uart();
 }
 
@@ -41,6 +43,24 @@ init_pll(void)
     } else {
         PLLCRbits.MF = (FCY_25MHZ / (FCY_XTAL / 128));
     }
+}
+
+void
+init_ports(void)
+{
+    /*
+     * Default configuration for ports
+     */
+    PAPAR = 0;
+    PBPAR = 0;
+    PCPAR = 0;
+
+    PADIR = 0;
+    PBDIR = 0;
+    PCDIR = 0;
+
+    PAODR = 0;
+    PBODR = 0;
 }
 
 void
@@ -131,28 +151,6 @@ init_memory_params(void)
 }
 
 void
-init_others(void)
-{
-    /*
-     * Initialise other registers
-     */
-    SYPCR = 0x47;               /* Enables bus monitor, disable dog */
-    SDCR = 0x0740;              /* Recommended by User Manual */
-
-    CICR = 0x390001;            /* SCC priorities and spreading */
-    CICRbits.IRL = 2;           /* CPM IRQ level */
-    CICRbits.HP = 0b11111;      /* Highest priority interrupt is PORTC */
-    CICRbits.VBA = 0b111;       /* Upper 3 bits of CPM interrupt vector */
-    
-    CR = 0x8001;                /* Reset the CP */
-
-    /* Disable and clear any CP interrupts that might be present */
-    CIMR = 0;
-    CIPR = 0xFFFFFFFF;
-    CISR = 0xFFFFFFFF;
-}
-
-void
 init_bss_and_data(void)
 {
     /*
@@ -186,10 +184,14 @@ void
 init_zeroise_pram(void)
 {
     /*
-     * Zeroise the Parameter RAM area of the DPRAM.
+     * Zeroise the User Data area of the DPRAM.
+     *
+     * Mask rev A and B have 1536 bytes of DPRAM available for BDs, clear this
+     * area only. Mask revs C+ have 1792 bytes, but a method to detect the mask
+     * version is unknown at present, so assume 1536 bytes.
      */
     uint16_t *dst = (void *)DPRBASE;
-    uint16_t size = 2240 / 2;
+    uint16_t size = 1536 / 2;
 
     for (; size > 0; size--, dst++) {
         *dst = 0;
@@ -197,19 +199,23 @@ init_zeroise_pram(void)
 }
 
 void
-init_ports(void)
+init_others(void)
 {
     /*
-     * Default configuration for ports
+     * Initialise other registers
      */
-    PAPAR = 0;
-    PBPAR = 0;
-    PCPAR = 0;
+    SYPCR = 0x47;               /* Enables bus monitor, disable dog */
+    SDCR = 0x0740;              /* Recommended by User Manual */
 
-    PADIR = 0;
-    PBDIR = 0;
-    PCDIR = 0;
+    CICR = 0x390001;            /* SCC priorities and spreading */
+    CICRbits.IRL = 2;           /* CPM IRQ level */
+    CICRbits.HP = 0b11111;      /* Highest priority interrupt is PORTC */
+    CICRbits.VBA = 0b111;       /* Upper 3 bits of CPM interrupt vector */
+    
+    CR = 0x8001;                /* Reset the CP */
 
-    PAODR = 0;
-    PBODR = 0;
+    /* Disable and clear any CP interrupts that might be present */
+    CIMR = 0;
+    CIPR = 0xFFFFFFFF;
+    CISR = 0xFFFFFFFF;
 }
