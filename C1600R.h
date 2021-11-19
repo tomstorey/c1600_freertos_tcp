@@ -415,6 +415,64 @@ typedef struct {
     void *SRC;
 } __SCCUARTTxBufferDescriptor_t;
 
+typedef struct {
+    union {
+        struct {
+            uint16_t E:1;
+            uint16_t :1;
+            uint16_t W:1;
+            uint16_t I:1;
+            uint16_t L:1;
+            uint16_t F:1;
+            uint16_t :4;
+            uint16_t LG:1;
+            uint16_t NO:1;
+            uint16_t SH:1;
+            uint16_t CR:1;
+            uint16_t OV:1;
+            uint16_t CL:1;
+        };
+        struct {
+            uint16_t u16;
+        };
+    } flags;
+    uint16_t LEN;
+    void *DST;
+} __SCCEthRxBufferDescriptor_t;
+
+typedef struct {
+    union {
+        struct {
+            uint16_t R:1;       /** Ready: 1=Buffer is ready to transmit */
+            uint16_t PAD:1;     /** Pad: 1=Pad short frames until length == MINFLR */
+            uint16_t W:1;       /** Wrap: 1=This is the las BD in the ring */
+            uint16_t I:1;
+            uint16_t L:1;
+            uint16_t TC:1;
+            uint16_t DEF:1;
+            uint16_t HB:1;
+            uint16_t LC:1;
+            uint16_t RL:1;
+            uint16_t RC3:1;
+            uint16_t RC2:1;
+            uint16_t RC1:1;
+            uint16_t RC0:1;
+            uint16_t UN:1;
+            uint16_t CSL:1;
+        };
+        struct {
+            uint16_t :10;
+            uint16_t RC:4;
+            uint16_t :2;
+        };
+        struct {
+            uint16_t u16;
+        };
+    } flags;
+    uint16_t LEN;
+    void *SRC;
+} __SCCEthTxBufferDescriptor_t;
+
 
 /* SCC1 */
 #define SCC1RBASE (*(volatile uint16_t *)(SCC1BASE))
@@ -426,7 +484,10 @@ typedef struct {
 #define SCC1MRBLR (*(volatile uint16_t *)(SCC1BASE + 0x6))
 
 /* SCC1 UART protocol specific registers */
+#define SCC1RES1 (*(volatile uint32_t *)(SCC1BASE + 0x30))
+#define SCC1RES2 (*(volatile uint32_t *)(SCC1BASE + 0x34))
 #define SCC1MAX_IDL (*(volatile uint16_t *)(SCC1BASE + 0x38))
+#define SCC1IDLC (*(volatile uint16_t *)(SCC1BASE + 0x3A))
 #define SCC1BRKCR (*(volatile uint16_t *)(SCC1BASE + 0x3C))
 #define SCC1PAREC (*(volatile uint16_t *)(SCC1BASE + 0x3E))
 #define SCC1FRMEC (*(volatile uint16_t *)(SCC1BASE + 0x40))
@@ -448,6 +509,43 @@ typedef struct {
 #define SCC1RCCR (*(volatile uint16_t *)(SCC1BASE + 0x62))
 #define SCC1RLBC (*(volatile uint16_t *)(SCC1BASE + 0x64))
 
+/* SCC1 Ethernet protocol specific registers */
+#define SCC1C_PRES (*(volatile uint32_t *)(SCC1BASE + 0x30))
+#define SCC1C_MASK (*(volatile uint32_t *)(SCC1BASE + 0x34))
+#define SCC1CRCEC (*(volatile uint32_t *)(SCC1BASE + 0x38))
+#define SCC1ALEC (*(volatile uint32_t *)(SCC1BASE + 0x3C))
+#define SCC1DISFC (*(volatile uint32_t *)(SCC1BASE + 0x40))
+#define SCC1PADS (*(volatile uint16_t *)(SCC1BASE + 0x44))
+#define SCC1RET_LIM (*(volatile uint16_t *)(SCC1BASE + 0x46))
+#define SCC1RET_CNT (*(volatile uint16_t *)(SCC1BASE + 0x48))
+#define SCC1MFLR (*(volatile uint16_t *)(SCC1BASE + 0x4A))
+#define SCC1MINFLR (*(volatile uint16_t *)(SCC1BASE + 0x4C))
+#define SCC1MAXD1 (*(volatile uint16_t *)(SCC1BASE + 0x4E))
+#define SCC1MAXD2 (*(volatile uint16_t *)(SCC1BASE + 0x50))
+#define SCC1MAXD (*(volatile uint16_t *)(SCC1BASE + 0x52))
+#define SCC1DMA_CNT (*(volatile uint16_t *)(SCC1BASE + 0x54))
+#define SCC1MAX_B (*(volatile uint16_t *)(SCC1BASE + 0x56))
+#define SCC1GADDR1 (*(volatile uint16_t *)(SCC1BASE + 0x58))
+#define SCC1GADDR2 (*(volatile uint16_t *)(SCC1BASE + 0x5A))
+#define SCC1GADDR3 (*(volatile uint16_t *)(SCC1BASE + 0x5C))
+#define SCC1GADDR4 (*(volatile uint16_t *)(SCC1BASE + 0x5E))
+#define SCC1PADDR1_L (*(volatile uint16_t *)(SCC1BASE + 0x72))
+#define SCC1PADDR1_M (*(volatile uint16_t *)(SCC1BASE + 0x74))
+#define SCC1PADDR1_H (*(volatile uint16_t *)(SCC1BASE + 0x76))
+#define SCC1P_PER (*(volatile uint16_t *)(SCC1BASE + 0x78))
+#define SCC1RFBD_PTR (*(volatile uint16_t *)(SCC1BASE + 0x7A))
+#define SCC1TFBD_PTR (*(volatile uint16_t *)(SCC1BASE + 0x7C))
+#define SCC1TLBD_PTR (*(volatile uint16_t *)(SCC1BASE + 0x7E))
+#define SCC1TX_LEN (*(volatile uint16_t *)(SCC1BASE + 0x92))
+#define SCC1IADDR1 (*(volatile uint16_t *)(SCC1BASE + 0x94))
+#define SCC1IADDR2 (*(volatile uint16_t *)(SCC1BASE + 0x96))
+#define SCC1IADDR3 (*(volatile uint16_t *)(SCC1BASE + 0x98))
+#define SCC1IADDR4 (*(volatile uint16_t *)(SCC1BASE + 0x9A))
+#define SCC1BOFF_CNT (*(volatile uint16_t *)(SCC1BASE + 0x9C))
+#define SCC1TADDR_L (*(volatile uint16_t *)(SCC1BASE + 0x9E))
+#define SCC1TADDR_M (*(volatile uint16_t *)(SCC1BASE + 0xA0))
+#define SCC1TADDR_H (*(volatile uint16_t *)(SCC1BASE + 0xA2))
+
 
 /* TODO: MISCBASE */
 
@@ -462,7 +560,10 @@ typedef struct {
 #define SCC2MRBLR (*(volatile uint16_t *)(SCC2BASE + 0x6))
 
 /* SCC2 UART protocol specific registers */
+#define SCC2RES1 (*(volatile uint32_t *)(SCC2BASE + 0x30))
+#define SCC2RES2 (*(volatile uint32_t *)(SCC2BASE + 0x34))
 #define SCC2MAX_IDL (*(volatile uint16_t *)(SCC2BASE + 0x38))
+#define SCC2IDLC (*(volatile uint16_t *)(SCC2BASE + 0x3A))
 #define SCC2BRKCR (*(volatile uint16_t *)(SCC2BASE + 0x3C))
 #define SCC2PAREC (*(volatile uint16_t *)(SCC2BASE + 0x3E))
 #define SCC2FRMEC (*(volatile uint16_t *)(SCC2BASE + 0x40))
@@ -483,6 +584,43 @@ typedef struct {
 #define SCC2RCCM (*(volatile uint16_t *)(SCC2BASE + 0x60))
 #define SCC2RCCR (*(volatile uint16_t *)(SCC2BASE + 0x62))
 #define SCC2RLBC (*(volatile uint16_t *)(SCC2BASE + 0x64))
+
+/* SCC2 Ethernet protocol specific registers */
+#define SCC2C_PRES (*(volatile uint32_t *)(SCC2BASE + 0x30))
+#define SCC2C_MASK (*(volatile uint32_t *)(SCC2BASE + 0x34))
+#define SCC2CRCEC (*(volatile uint32_t *)(SCC2BASE + 0x38))
+#define SCC2ALEC (*(volatile uint32_t *)(SCC2BASE + 0x3C))
+#define SCC2DISFC (*(volatile uint32_t *)(SCC2BASE + 0x40))
+#define SCC2PADS (*(volatile uint16_t *)(SCC2BASE + 0x44))
+#define SCC2RET_LIM (*(volatile uint16_t *)(SCC2BASE + 0x46))
+#define SCC2RET_CNT (*(volatile uint16_t *)(SCC2BASE + 0x48))
+#define SCC2MFLR (*(volatile uint16_t *)(SCC2BASE + 0x4A))
+#define SCC2MINFLR (*(volatile uint16_t *)(SCC2BASE + 0x4C))
+#define SCC2MAXD1 (*(volatile uint16_t *)(SCC2BASE + 0x4E))
+#define SCC2MAXD2 (*(volatile uint16_t *)(SCC2BASE + 0x50))
+#define SCC2MAXD (*(volatile uint16_t *)(SCC2BASE + 0x52))
+#define SCC2DMA_CNT (*(volatile uint16_t *)(SCC2BASE + 0x54))
+#define SCC2MAX_B (*(volatile uint16_t *)(SCC2BASE + 0x56))
+#define SCC2GADDR1 (*(volatile uint16_t *)(SCC2BASE + 0x58))
+#define SCC2GADDR2 (*(volatile uint16_t *)(SCC2BASE + 0x5A))
+#define SCC2GADDR3 (*(volatile uint16_t *)(SCC2BASE + 0x5C))
+#define SCC2GADDR4 (*(volatile uint16_t *)(SCC2BASE + 0x5E))
+#define SCC2PADDR1_L (*(volatile uint16_t *)(SCC2BASE + 0x72))
+#define SCC2PADDR1_M (*(volatile uint16_t *)(SCC2BASE + 0x74))
+#define SCC2PADDR1_H (*(volatile uint16_t *)(SCC2BASE + 0x76))
+#define SCC2P_PER (*(volatile uint16_t *)(SCC2BASE + 0x78))
+#define SCC2RFBD_PTR (*(volatile uint16_t *)(SCC2BASE + 0x7A))
+#define SCC2TFBD_PTR (*(volatile uint16_t *)(SCC2BASE + 0x7C))
+#define SCC2TLBD_PTR (*(volatile uint16_t *)(SCC2BASE + 0x7E))
+#define SCC2TX_LEN (*(volatile uint16_t *)(SCC2BASE + 0x92))
+#define SCC2IADDR1 (*(volatile uint16_t *)(SCC2BASE + 0x94))
+#define SCC2IADDR2 (*(volatile uint16_t *)(SCC2BASE + 0x96))
+#define SCC2IADDR3 (*(volatile uint16_t *)(SCC2BASE + 0x98))
+#define SCC2IADDR4 (*(volatile uint16_t *)(SCC2BASE + 0x9A))
+#define SCC2BOFF_CNT (*(volatile uint16_t *)(SCC2BASE + 0x9C))
+#define SCC2TADDR_L (*(volatile uint16_t *)(SCC2BASE + 0x9E))
+#define SCC2TADDR_M (*(volatile uint16_t *)(SCC2BASE + 0xA0))
+#define SCC2TADDR_H (*(volatile uint16_t *)(SCC2BASE + 0xA2))
 
 
 /* SPI */
@@ -508,7 +646,10 @@ typedef struct {
 #define SCC3MRBLR (*(volatile uint16_t *)(SCC3BASE + 0x6))
 
 /* SCC3 UART protocol specific registers */
+#define SCC3RES1 (*(volatile uint32_t *)(SCC3BASE + 0x30))
+#define SCC3RES2 (*(volatile uint32_t *)(SCC3BASE + 0x34))
 #define SCC3MAX_IDL (*(volatile uint16_t *)(SCC3BASE + 0x38))
+#define SCC3IDLC (*(volatile uint16_t *)(SCC3BASE + 0x3A))
 #define SCC3BRKCR (*(volatile uint16_t *)(SCC3BASE + 0x3C))
 #define SCC3PAREC (*(volatile uint16_t *)(SCC3BASE + 0x3E))
 #define SCC3FRMEC (*(volatile uint16_t *)(SCC3BASE + 0x40))
@@ -529,6 +670,43 @@ typedef struct {
 #define SCC3RCCM (*(volatile uint16_t *)(SCC3BASE + 0x60))
 #define SCC3RCCR (*(volatile uint16_t *)(SCC3BASE + 0x62))
 #define SCC3RLBC (*(volatile uint16_t *)(SCC3BASE + 0x64))
+
+/* SCC3 Ethernet protocol specific registers */
+#define SCC3C_PRES (*(volatile uint32_t *)(SCC3BASE + 0x30))
+#define SCC3C_MASK (*(volatile uint32_t *)(SCC3BASE + 0x34))
+#define SCC3CRCEC (*(volatile uint32_t *)(SCC3BASE + 0x38))
+#define SCC3ALEC (*(volatile uint32_t *)(SCC3BASE + 0x3C))
+#define SCC3DISFC (*(volatile uint32_t *)(SCC3BASE + 0x40))
+#define SCC3PADS (*(volatile uint16_t *)(SCC3BASE + 0x44))
+#define SCC3RET_LIM (*(volatile uint16_t *)(SCC3BASE + 0x46))
+#define SCC3RET_CNT (*(volatile uint16_t *)(SCC3BASE + 0x48))
+#define SCC3MFLR (*(volatile uint16_t *)(SCC3BASE + 0x4A))
+#define SCC3MINFLR (*(volatile uint16_t *)(SCC3BASE + 0x4C))
+#define SCC3MAXD1 (*(volatile uint16_t *)(SCC3BASE + 0x4E))
+#define SCC3MAXD2 (*(volatile uint16_t *)(SCC3BASE + 0x50))
+#define SCC3MAXD (*(volatile uint16_t *)(SCC3BASE + 0x52))
+#define SCC3DMA_CNT (*(volatile uint16_t *)(SCC3BASE + 0x54))
+#define SCC3MAX_B (*(volatile uint16_t *)(SCC3BASE + 0x56))
+#define SCC3GADDR1 (*(volatile uint16_t *)(SCC3BASE + 0x58))
+#define SCC3GADDR2 (*(volatile uint16_t *)(SCC3BASE + 0x5A))
+#define SCC3GADDR3 (*(volatile uint16_t *)(SCC3BASE + 0x5C))
+#define SCC3GADDR4 (*(volatile uint16_t *)(SCC3BASE + 0x5E))
+#define SCC3PADDR1_L (*(volatile uint16_t *)(SCC3BASE + 0x72))
+#define SCC3PADDR1_M (*(volatile uint16_t *)(SCC3BASE + 0x74))
+#define SCC3PADDR1_H (*(volatile uint16_t *)(SCC3BASE + 0x76))
+#define SCC3P_PER (*(volatile uint16_t *)(SCC3BASE + 0x78))
+#define SCC3RFBD_PTR (*(volatile uint16_t *)(SCC3BASE + 0x7A))
+#define SCC3TFBD_PTR (*(volatile uint16_t *)(SCC3BASE + 0x7C))
+#define SCC3TLBD_PTR (*(volatile uint16_t *)(SCC3BASE + 0x7E))
+#define SCC3TX_LEN (*(volatile uint16_t *)(SCC3BASE + 0x92))
+#define SCC3IADDR1 (*(volatile uint16_t *)(SCC3BASE + 0x94))
+#define SCC3IADDR2 (*(volatile uint16_t *)(SCC3BASE + 0x96))
+#define SCC3IADDR3 (*(volatile uint16_t *)(SCC3BASE + 0x98))
+#define SCC3IADDR4 (*(volatile uint16_t *)(SCC3BASE + 0x9A))
+#define SCC3BOFF_CNT (*(volatile uint16_t *)(SCC3BASE + 0x9C))
+#define SCC3TADDR_L (*(volatile uint16_t *)(SCC3BASE + 0x9E))
+#define SCC3TADDR_M (*(volatile uint16_t *)(SCC3BASE + 0xA0))
+#define SCC3TADDR_H (*(volatile uint16_t *)(SCC3BASE + 0xA2))
 
 
 /* IDMA1 */
@@ -559,8 +737,11 @@ typedef struct {
 #define SCC4TFCRbits (*(volatile __TFCRbits_t *)(SCC4BASE + 0x5))
 #define SCC4MRBLR (*(volatile uint16_t *)(SCC4BASE + 0x6))
 
-/* SCC1 UART protocol specific registers */
+/* SCC4 UART protocol specific registers */
+#define SCC4RES1 (*(volatile uint32_t *)(SCC4BASE + 0x30))
+#define SCC4RES2 (*(volatile uint32_t *)(SCC4BASE + 0x34))
 #define SCC4MAX_IDL (*(volatile uint16_t *)(SCC4BASE + 0x38))
+#define SCC4IDLC (*(volatile uint16_t *)(SCC4BASE + 0x3A))
 #define SCC4BRKCR (*(volatile uint16_t *)(SCC4BASE + 0x3C))
 #define SCC4PAREC (*(volatile uint16_t *)(SCC4BASE + 0x3E))
 #define SCC4FRMEC (*(volatile uint16_t *)(SCC4BASE + 0x40))
@@ -581,6 +762,43 @@ typedef struct {
 #define SCC4RCCM (*(volatile uint16_t *)(SCC4BASE + 0x60))
 #define SCC4RCCR (*(volatile uint16_t *)(SCC4BASE + 0x62))
 #define SCC4RLBC (*(volatile uint16_t *)(SCC4BASE + 0x64))
+
+/* SCC4 Ethernet protocol specific registers */
+#define SCC4C_PRES (*(volatile uint32_t *)(SCC4BASE + 0x30))
+#define SCC4C_MASK (*(volatile uint32_t *)(SCC4BASE + 0x34))
+#define SCC4CRCEC (*(volatile uint32_t *)(SCC4BASE + 0x38))
+#define SCC4ALEC (*(volatile uint32_t *)(SCC4BASE + 0x3C))
+#define SCC4DISFC (*(volatile uint32_t *)(SCC4BASE + 0x40))
+#define SCC4PADS (*(volatile uint16_t *)(SCC4BASE + 0x44))
+#define SCC4RET_LIM (*(volatile uint16_t *)(SCC4BASE + 0x46))
+#define SCC4RET_CNT (*(volatile uint16_t *)(SCC4BASE + 0x48))
+#define SCC4MFLR (*(volatile uint16_t *)(SCC4BASE + 0x4A))
+#define SCC4MINFLR (*(volatile uint16_t *)(SCC4BASE + 0x4C))
+#define SCC4MAXD1 (*(volatile uint16_t *)(SCC4BASE + 0x4E))
+#define SCC4MAXD2 (*(volatile uint16_t *)(SCC4BASE + 0x50))
+#define SCC4MAXD (*(volatile uint16_t *)(SCC4BASE + 0x52))
+#define SCC4DMA_CNT (*(volatile uint16_t *)(SCC4BASE + 0x54))
+#define SCC4MAX_B (*(volatile uint16_t *)(SCC4BASE + 0x56))
+#define SCC4GADDR1 (*(volatile uint16_t *)(SCC4BASE + 0x58))
+#define SCC4GADDR2 (*(volatile uint16_t *)(SCC4BASE + 0x5A))
+#define SCC4GADDR3 (*(volatile uint16_t *)(SCC4BASE + 0x5C))
+#define SCC4GADDR4 (*(volatile uint16_t *)(SCC4BASE + 0x5E))
+#define SCC4PADDR1_L (*(volatile uint16_t *)(SCC4BASE + 0x72))
+#define SCC4PADDR1_M (*(volatile uint16_t *)(SCC4BASE + 0x74))
+#define SCC4PADDR1_H (*(volatile uint16_t *)(SCC4BASE + 0x76))
+#define SCC4P_PER (*(volatile uint16_t *)(SCC4BASE + 0x78))
+#define SCC4RFBD_PTR (*(volatile uint16_t *)(SCC4BASE + 0x7A))
+#define SCC4TFBD_PTR (*(volatile uint16_t *)(SCC4BASE + 0x7C))
+#define SCC4TLBD_PTR (*(volatile uint16_t *)(SCC4BASE + 0x7E))
+#define SCC4TX_LEN (*(volatile uint16_t *)(SCC4BASE + 0x92))
+#define SCC4IADDR1 (*(volatile uint16_t *)(SCC4BASE + 0x94))
+#define SCC4IADDR2 (*(volatile uint16_t *)(SCC4BASE + 0x96))
+#define SCC4IADDR3 (*(volatile uint16_t *)(SCC4BASE + 0x98))
+#define SCC4IADDR4 (*(volatile uint16_t *)(SCC4BASE + 0x9A))
+#define SCC4BOFF_CNT (*(volatile uint16_t *)(SCC4BASE + 0x9C))
+#define SCC4TADDR_L (*(volatile uint16_t *)(SCC4BASE + 0x9E))
+#define SCC4TADDR_M (*(volatile uint16_t *)(SCC4BASE + 0xA0))
+#define SCC4TADDR_H (*(volatile uint16_t *)(SCC4BASE + 0xA2))
 
 
 /* IDMA2 */
@@ -2006,7 +2224,6 @@ typedef union {
 #define GSMR4Hbits (*(volatile __GSMRHbits_t *)(REGB + 0x664))
 
 
-/* TODO Protocol specific structs */
 #define PSMR1 (*(volatile uint16_t *)(REGB + 0x608))
 #define PSMR2 (*(volatile uint16_t *)(REGB + 0x628))
 #define PSMR3 (*(volatile uint16_t *)(REGB + 0x648))
@@ -2046,6 +2263,40 @@ typedef union {
 #define PSMR2UARTbits (*(volatile __PSMRUARTbits_t *)(REGB + 0x628))
 #define PSMR3UARTbits (*(volatile __PSMRUARTbits_t *)(REGB + 0x648))
 #define PSMR4UARTbits (*(volatile __PSMRUARTbits_t *)(REGB + 0x668))
+typedef union {
+    struct {
+        uint16_t HBC:1;
+        uint16_t FC:1;
+        uint16_t RSH:1;
+        uint16_t IAM:1;
+        uint16_t CRC1:1;
+        uint16_t CRC0:1;
+        uint16_t PRO:1;
+        uint16_t BRO:1;
+        uint16_t SBT:1;
+        uint16_t LPB:1;
+        uint16_t SIP:1;
+        uint16_t LCW:1;
+        uint16_t NIB2:1;
+        uint16_t NIB1:1;
+        uint16_t NIB0:1;
+        uint16_t FDE:1;
+    };
+    struct {
+        uint16_t :4;
+        uint16_t CRC:2;
+        uint16_t :6;
+        uint16_t NIB:3;
+        uint16_t :1;
+    };
+    struct {
+        uint16_t u16;
+    };
+} __PSMREthbits_t;
+#define PSMR1ETHbits (*(volatile __PSMREthbits_t *)(REGB + 0x608))
+#define PSMR2ETHbits (*(volatile __PSMREthbits_t *)(REGB + 0x628))
+#define PSMR3ETHbits (*(volatile __PSMREthbits_t *)(REGB + 0x648))
+#define PSMR4ETHbits (*(volatile __PSMREthbits_t *)(REGB + 0x668))
 
 
 #define TODR1 (*(volatile uint16_t *)(REGB + 0x60C))
@@ -2086,7 +2337,6 @@ typedef union {
 #define DSR4bits (*(volatile __DSRbits_t *)(REGB + 0x66E))
 
 
-/* TODO Protocol specific structs */
 #define SCCE1 (*(volatile uint16_t *)(REGB + 0x610))
 #define SCCE2 (*(volatile uint16_t *)(REGB + 0x630))
 #define SCCE3 (*(volatile uint16_t *)(REGB + 0x650))
@@ -2116,9 +2366,27 @@ typedef union {
 #define SCCE2UARTbits (*(volatile __SCCEUARTbits_t *)(REGB + 0x630))
 #define SCCE3UARTbits (*(volatile __SCCEUARTbits_t *)(REGB + 0x650))
 #define SCCE4UARTbits (*(volatile __SCCEUARTbits_t *)(REGB + 0x670))
+typedef union {
+    struct {
+        uint16_t :8;
+        uint16_t GRA:1;
+        uint16_t :2;
+        uint16_t TXE:1;
+        uint16_t RXF:1;
+        uint16_t BSY:1;
+        uint16_t TXB:1;
+        uint16_t RXB:1;
+    };
+    struct {
+        uint16_t u16;
+    };
+} __SCCEEthbits_t;
+#define SCCE1ETHbits (*(volatile __SCCEEthbits_t *)(REGB + 0x610))
+#define SCCE2ETHbits (*(volatile __SCCEEthbits_t *)(REGB + 0x630))
+#define SCCE3ETHbits (*(volatile __SCCEEthbits_t *)(REGB + 0x650))
+#define SCCE4ETHbits (*(volatile __SCCEEthbits_t *)(REGB + 0x670))
 
 
-/* TODO Protocol specific structs */
 #define SCCM1 (*(volatile uint16_t *)(REGB + 0x614))
 #define SCCM2 (*(volatile uint16_t *)(REGB + 0x634))
 #define SCCM3 (*(volatile uint16_t *)(REGB + 0x654))
@@ -2148,6 +2416,25 @@ typedef union {
 #define SCCM2UARTbits (*(volatile __SCCMUARTbits_t *)(REGB + 0x634))
 #define SCCM3UARTbits (*(volatile __SCCMUARTbits_t *)(REGB + 0x654))
 #define SCCM4UARTbits (*(volatile __SCCMUARTbits_t *)(REGB + 0x674))
+typedef union {
+    struct {
+        uint16_t :8;
+        uint16_t GRA:1;
+        uint16_t :2;
+        uint16_t TXE:1;
+        uint16_t RXF:1;
+        uint16_t BSY:1;
+        uint16_t TXB:1;
+        uint16_t RXB:1;
+    };
+    struct {
+        uint16_t u16;
+    };
+} __SCCMEthbits_t;
+#define SCCM1ETHbits (*(volatile __SCCMEthbits_t *)(REGB + 0x614))
+#define SCCM2ETHbits (*(volatile __SCCMEthbits_t *)(REGB + 0x634))
+#define SCCM3ETHbits (*(volatile __SCCMEthbits_t *)(REGB + 0x654))
+#define SCCM4ETHbits (*(volatile __SCCMEthbits_t *)(REGB + 0x674))
 
 
 #define SCCS1 (*(volatile uint8_t *)(REGB + 0x617))
@@ -2621,11 +2908,203 @@ typedef union {
 #define SSTR (PERIPHERAL_BASE + 0x30001)
 #define SSCR (PERIPHERAL_BASE + 0x30002)
 #define SACR (PERIPHERAL_BASE + 0x30003)
+#define SCC1RBASE (SCC1BASE)
+#define SCC1TBASE (SCC1BASE + 0x2)
+#define SCC1RFCR (SCC1BASE + 0x4)
+#define SCC1TFCR (SCC1BASE + 0x5)
+#define SCC1MRBLR (SCC1BASE + 0x6)
+#define SCC1RES1 (SCC1BASE + 0x30)
+#define SCC1RES2 (SCC1BASE + 0x34)
+#define SCC1MAX_IDL (SCC1BASE + 0x38)
+#define SCC1IDLC (SCC1BASE + 0x3A)
+#define SCC1BRKCR (SCC1BASE + 0x3C)
+#define SCC1PAREC (SCC1BASE + 0x3E)
+#define SCC1FRMEC (SCC1BASE + 0x40)
+#define SCC1NOSEC (SCC1BASE + 0x42)
+#define SCC1BRKEC (SCC1BASE + 0x44)
+#define SCC1BRKLN (SCC1BASE + 0x46)
+#define SCC1UADDR1 (SCC1BASE + 0x48)
+#define SCC1UADDR2 (SCC1BASE + 0x4A)
+#define SCC1TOSEQ (SCC1BASE + 0x4E)
+#define SCC1CHARACTER1 (SCC1BASE + 0x50)
+#define SCC1CHARACTER2 (SCC1BASE + 0x52)
+#define SCC1CHARACTER3 (SCC1BASE + 0x54)
+#define SCC1CHARACTER4 (SCC1BASE + 0x56)
+#define SCC1CHARACTER5 (SCC1BASE + 0x58)
+#define SCC1CHARACTER6 (SCC1BASE + 0x5A)
+#define SCC1CHARACTER7 (SCC1BASE + 0x5C)
+#define SCC1CHARACTER8 (SCC1BASE + 0x5E)
+#define SCC1RCCM (SCC1BASE + 0x60)
+#define SCC1RCCR (SCC1BASE + 0x62)
+#define SCC1RLBC (SCC1BASE + 0x64)
+#define SCC1C_PRES (SCC1BASE + 0x30)
+#define SCC1C_MASK (SCC1BASE + 0x34)
+#define SCC1CRCEC (SCC1BASE + 0x38)
+#define SCC1ALEC (SCC1BASE + 0x3C)
+#define SCC1DISFC (SCC1BASE + 0x40)
+#define SCC1PADS (SCC1BASE + 0x44)
+#define SCC1RET_LIM (SCC1BASE + 0x46)
+#define SCC1RET_CNT (SCC1BASE + 0x48)
+#define SCC1MFLR (SCC1BASE + 0x4A)
+#define SCC1MINFLR (SCC1BASE + 0x4C)
+#define SCC1MAXD1 (SCC1BASE + 0x4E)
+#define SCC1MAXD2 (SCC1BASE + 0x50)
+#define SCC1MAXD (SCC1BASE + 0x52)
+#define SCC1DMA_CNT (SCC1BASE + 0x54)
+#define SCC1MAX_B (SCC1BASE + 0x56)
+#define SCC1GADDR1 (SCC1BASE + 0x58)
+#define SCC1GADDR2 (SCC1BASE + 0x5A)
+#define SCC1GADDR3 (SCC1BASE + 0x5C)
+#define SCC1GADDR4 (SCC1BASE + 0x5E)
+#define SCC1PADDR1_L (SCC1BASE + 0x72)
+#define SCC1PADDR1_M (SCC1BASE + 0x74)
+#define SCC1PADDR1_H (SCC1BASE + 0x76)
+#define SCC1P_PER (SCC1BASE + 0x78)
+#define SCC1RFBD_PTR (SCC1BASE + 0x7A)
+#define SCC1TFBD_PTR (SCC1BASE + 0x7C)
+#define SCC1TLBD_PTR (SCC1BASE + 0x7E)
+#define SCC1TX_LEN (SCC1BASE + 0x92)
+#define SCC1IADDR1 (SCC1BASE + 0x94)
+#define SCC1IADDR2 (SCC1BASE + 0x96)
+#define SCC1IADDR3 (SCC1BASE + 0x98)
+#define SCC1IADDR4 (SCC1BASE + 0x9A)
+#define SCC1BOFF_CNT (SCC1BASE + 0x9C)
+#define SCC1TADDR_L (SCC1BASE + 0x9E)
+#define SCC1TADDR_M (SCC1BASE + 0xA0)
+#define SCC1TADDR_H (SCC1BASE + 0xA2)
+#define SCC2RBASE (SCC2BASE)
+#define SCC2TBASE (SCC2BASE + 0x2)
+#define SCC2RFCR (SCC2BASE + 0x4)
+#define SCC2TFCR (SCC2BASE + 0x5)
+#define SCC2MRBLR (SCC2BASE + 0x6)
+#define SCC2RES1 (SCC2BASE + 0x30)
+#define SCC2RES2 (SCC2BASE + 0x34)
+#define SCC2MAX_IDL (SCC2BASE + 0x38)
+#define SCC2IDLC (SCC2BASE + 0x3A)
+#define SCC2BRKCR (SCC2BASE + 0x3C)
+#define SCC2PAREC (SCC2BASE + 0x3E)
+#define SCC2FRMEC (SCC2BASE + 0x40)
+#define SCC2NOSEC (SCC2BASE + 0x42)
+#define SCC2BRKEC (SCC2BASE + 0x44)
+#define SCC2BRKLN (SCC2BASE + 0x46)
+#define SCC2UADDR1 (SCC2BASE + 0x48)
+#define SCC2UADDR2 (SCC2BASE + 0x4A)
+#define SCC2TOSEQ (SCC2BASE + 0x4E)
+#define SCC2CHARACTER1 (SCC2BASE + 0x50)
+#define SCC2CHARACTER2 (SCC2BASE + 0x52)
+#define SCC2CHARACTER3 (SCC2BASE + 0x54)
+#define SCC2CHARACTER4 (SCC2BASE + 0x56)
+#define SCC2CHARACTER5 (SCC2BASE + 0x58)
+#define SCC2CHARACTER6 (SCC2BASE + 0x5A)
+#define SCC2CHARACTER7 (SCC2BASE + 0x5C)
+#define SCC2CHARACTER8 (SCC2BASE + 0x5E)
+#define SCC2RCCM (SCC2BASE + 0x60)
+#define SCC2RCCR (SCC2BASE + 0x62)
+#define SCC2RLBC (SCC2BASE + 0x64)
+#define SCC2C_PRES (SCC2BASE + 0x30)
+#define SCC2C_MASK (SCC2BASE + 0x34)
+#define SCC2CRCEC (SCC2BASE + 0x38)
+#define SCC2ALEC (SCC2BASE + 0x3C)
+#define SCC2DISFC (SCC2BASE + 0x40)
+#define SCC2PADS (SCC2BASE + 0x44)
+#define SCC2RET_LIM (SCC2BASE + 0x46)
+#define SCC2RET_CNT (SCC2BASE + 0x48)
+#define SCC2MFLR (SCC2BASE + 0x4A)
+#define SCC2MINFLR (SCC2BASE + 0x4C)
+#define SCC2MAXD1 (SCC2BASE + 0x4E)
+#define SCC2MAXD2 (SCC2BASE + 0x50)
+#define SCC2MAXD (SCC2BASE + 0x52)
+#define SCC2DMA_CNT (SCC2BASE + 0x54)
+#define SCC2MAX_B (SCC2BASE + 0x56)
+#define SCC2GADDR1 (SCC2BASE + 0x58)
+#define SCC2GADDR2 (SCC2BASE + 0x5A)
+#define SCC2GADDR3 (SCC2BASE + 0x5C)
+#define SCC2GADDR4 (SCC2BASE + 0x5E)
+#define SCC2PADDR1_L (SCC2BASE + 0x72)
+#define SCC2PADDR1_M (SCC2BASE + 0x74)
+#define SCC2PADDR1_H (SCC2BASE + 0x76)
+#define SCC2P_PER (SCC2BASE + 0x78)
+#define SCC2RFBD_PTR (SCC2BASE + 0x7A)
+#define SCC2TFBD_PTR (SCC2BASE + 0x7C)
+#define SCC2TLBD_PTR (SCC2BASE + 0x7E)
+#define SCC2TX_LEN (SCC2BASE + 0x92)
+#define SCC2IADDR1 (SCC2BASE + 0x94)
+#define SCC2IADDR2 (SCC2BASE + 0x96)
+#define SCC2IADDR3 (SCC2BASE + 0x98)
+#define SCC2IADDR4 (SCC2BASE + 0x9A)
+#define SCC2BOFF_CNT (SCC2BASE + 0x9C)
+#define SCC2TADDR_L (SCC2BASE + 0x9E)
+#define SCC2TADDR_M (SCC2BASE + 0xA0)
+#define SCC2TADDR_H (SCC2BASE + 0xA2)
 #define SPIRBASE (SPIBASE)
 #define SPITBASE (SPIBASE + 0x2)
 #define SPIRFCR (SPIBASE + 0x4)
 #define SPITFCR (SPIBASE + 0x5)
 #define SPIMRBLR (SPIBASE + 0x6)
+#define SCC3RBASE (SCC3BASE)
+#define SCC3TBASE (SCC3BASE + 0x2)
+#define SCC3RFCR (SCC3BASE + 0x4)
+#define SCC3TFCR (SCC3BASE + 0x5)
+#define SCC3MRBLR (SCC3BASE + 0x6)
+#define SCC3RES1 (SCC3BASE + 0x30)
+#define SCC3RES2 (SCC3BASE + 0x34)
+#define SCC3MAX_IDL (SCC3BASE + 0x38)
+#define SCC3IDLC (SCC3BASE + 0x3A)
+#define SCC3BRKCR (SCC3BASE + 0x3C)
+#define SCC3PAREC (SCC3BASE + 0x3E)
+#define SCC3FRMEC (SCC3BASE + 0x40)
+#define SCC3NOSEC (SCC3BASE + 0x42)
+#define SCC3BRKEC (SCC3BASE + 0x44)
+#define SCC3BRKLN (SCC3BASE + 0x46)
+#define SCC3UADDR1 (SCC3BASE + 0x48)
+#define SCC3UADDR2 (SCC3BASE + 0x4A)
+#define SCC3TOSEQ (SCC3BASE + 0x4E)
+#define SCC3CHARACTER1 (SCC3BASE + 0x50)
+#define SCC3CHARACTER2 (SCC3BASE + 0x52)
+#define SCC3CHARACTER3 (SCC3BASE + 0x54)
+#define SCC3CHARACTER4 (SCC3BASE + 0x56)
+#define SCC3CHARACTER5 (SCC3BASE + 0x58)
+#define SCC3CHARACTER6 (SCC3BASE + 0x5A)
+#define SCC3CHARACTER7 (SCC3BASE + 0x5C)
+#define SCC3CHARACTER8 (SCC3BASE + 0x5E)
+#define SCC3RCCM (SCC3BASE + 0x60)
+#define SCC3RCCR (SCC3BASE + 0x62)
+#define SCC3RLBC (SCC3BASE + 0x64)
+#define SCC3C_PRES (SCC3BASE + 0x30)
+#define SCC3C_MASK (SCC3BASE + 0x34)
+#define SCC3CRCEC (SCC3BASE + 0x38)
+#define SCC3ALEC (SCC3BASE + 0x3C)
+#define SCC3DISFC (SCC3BASE + 0x40)
+#define SCC3PADS (SCC3BASE + 0x44)
+#define SCC3RET_LIM (SCC3BASE + 0x46)
+#define SCC3RET_CNT (SCC3BASE + 0x48)
+#define SCC3MFLR (SCC3BASE + 0x4A)
+#define SCC3MINFLR (SCC3BASE + 0x4C)
+#define SCC3MAXD1 (SCC3BASE + 0x4E)
+#define SCC3MAXD2 (SCC3BASE + 0x50)
+#define SCC3MAXD (SCC3BASE + 0x52)
+#define SCC3DMA_CNT (SCC3BASE + 0x54)
+#define SCC3MAX_B (SCC3BASE + 0x56)
+#define SCC3GADDR1 (SCC3BASE + 0x58)
+#define SCC3GADDR2 (SCC3BASE + 0x5A)
+#define SCC3GADDR3 (SCC3BASE + 0x5C)
+#define SCC3GADDR4 (SCC3BASE + 0x5E)
+#define SCC3PADDR1_L (SCC3BASE + 0x72)
+#define SCC3PADDR1_M (SCC3BASE + 0x74)
+#define SCC3PADDR1_H (SCC3BASE + 0x76)
+#define SCC3P_PER (SCC3BASE + 0x78)
+#define SCC3RFBD_PTR (SCC3BASE + 0x7A)
+#define SCC3TFBD_PTR (SCC3BASE + 0x7C)
+#define SCC3TLBD_PTR (SCC3BASE + 0x7E)
+#define SCC3TX_LEN (SCC3BASE + 0x92)
+#define SCC3IADDR1 (SCC3BASE + 0x94)
+#define SCC3IADDR2 (SCC3BASE + 0x96)
+#define SCC3IADDR3 (SCC3BASE + 0x98)
+#define SCC3IADDR4 (SCC3BASE + 0x9A)
+#define SCC3BOFF_CNT (SCC3BASE + 0x9C)
+#define SCC3TADDR_L (SCC3BASE + 0x9E)
+#define SCC3TADDR_M (SCC3BASE + 0xA0)
+#define SCC3TADDR_H (SCC3BASE + 0xA2)
 #define IDMA1IBASE (IDMA1BASE)
 #define IDMA1IBPTR (IDMA1BASE + 0x2)
 #define SMC1RBASE (SMC1BASE)
@@ -2637,6 +3116,70 @@ typedef union {
 #define SMC1BRKLN (SMC1BASE + 0x2C)
 #define SMC1BRKEC (SMC1BASE + 0x2E)
 #define SMC1BRKCR (SMC1BASE + 0x30)
+#define SCC4RBASE (SCC4BASE)
+#define SCC4TBASE (SCC4BASE + 0x2)
+#define SCC4RFCR (SCC4BASE + 0x4)
+#define SCC4TFCR (SCC4BASE + 0x5)
+#define SCC4MRBLR (SCC4BASE + 0x6)
+#define SCC4RES1 (SCC4BASE + 0x30)
+#define SCC4RES2 (SCC4BASE + 0x34)
+#define SCC4MAX_IDL (SCC4BASE + 0x38)
+#define SCC4IDLC (SCC4BASE + 0x3A)
+#define SCC4BRKCR (SCC4BASE + 0x3C)
+#define SCC4PAREC (SCC4BASE + 0x3E)
+#define SCC4FRMEC (SCC4BASE + 0x40)
+#define SCC4NOSEC (SCC4BASE + 0x42)
+#define SCC4BRKEC (SCC4BASE + 0x44)
+#define SCC4BRKLN (SCC4BASE + 0x46)
+#define SCC4UADDR1 (SCC4BASE + 0x48)
+#define SCC4UADDR2 (SCC4BASE + 0x4A)
+#define SCC4TOSEQ (SCC4BASE + 0x4E)
+#define SCC4CHARACTER1 (SCC4BASE + 0x50)
+#define SCC4CHARACTER2 (SCC4BASE + 0x52)
+#define SCC4CHARACTER3 (SCC4BASE + 0x54)
+#define SCC4CHARACTER4 (SCC4BASE + 0x56)
+#define SCC4CHARACTER5 (SCC4BASE + 0x58)
+#define SCC4CHARACTER6 (SCC4BASE + 0x5A)
+#define SCC4CHARACTER7 (SCC4BASE + 0x5C)
+#define SCC4CHARACTER8 (SCC4BASE + 0x5E)
+#define SCC4RCCM (SCC4BASE + 0x60)
+#define SCC4RCCR (SCC4BASE + 0x62)
+#define SCC4RLBC (SCC4BASE + 0x64)
+#define SCC4C_PRES (SCC4BASE + 0x30)
+#define SCC4C_MASK (SCC4BASE + 0x34)
+#define SCC4CRCEC (SCC4BASE + 0x38)
+#define SCC4ALEC (SCC4BASE + 0x3C)
+#define SCC4DISFC (SCC4BASE + 0x40)
+#define SCC4PADS (SCC4BASE + 0x44)
+#define SCC4RET_LIM (SCC4BASE + 0x46)
+#define SCC4RET_CNT (SCC4BASE + 0x48)
+#define SCC4MFLR (SCC4BASE + 0x4A)
+#define SCC4MINFLR (SCC4BASE + 0x4C)
+#define SCC4MAXD1 (SCC4BASE + 0x4E)
+#define SCC4MAXD2 (SCC4BASE + 0x50)
+#define SCC4MAXD (SCC4BASE + 0x52)
+#define SCC4DMA_CNT (SCC4BASE + 0x54)
+#define SCC4MAX_B (SCC4BASE + 0x56)
+#define SCC4GADDR1 (SCC4BASE + 0x58)
+#define SCC4GADDR2 (SCC4BASE + 0x5A)
+#define SCC4GADDR3 (SCC4BASE + 0x5C)
+#define SCC4GADDR4 (SCC4BASE + 0x5E)
+#define SCC4PADDR1_L (SCC4BASE + 0x72)
+#define SCC4PADDR1_M (SCC4BASE + 0x74)
+#define SCC4PADDR1_H (SCC4BASE + 0x76)
+#define SCC4P_PER (SCC4BASE + 0x78)
+#define SCC4RFBD_PTR (SCC4BASE + 0x7A)
+#define SCC4TFBD_PTR (SCC4BASE + 0x7C)
+#define SCC4TLBD_PTR (SCC4BASE + 0x7E)
+#define SCC4TX_LEN (SCC4BASE + 0x92)
+#define SCC4IADDR1 (SCC4BASE + 0x94)
+#define SCC4IADDR2 (SCC4BASE + 0x96)
+#define SCC4IADDR3 (SCC4BASE + 0x98)
+#define SCC4IADDR4 (SCC4BASE + 0x9A)
+#define SCC4BOFF_CNT (SCC4BASE + 0x9C)
+#define SCC4TADDR_L (SCC4BASE + 0x9E)
+#define SCC4TADDR_M (SCC4BASE + 0xA0)
+#define SCC4TADDR_H (SCC4BASE + 0xA2)
 #define IDMA2IBASE (IDMA2BASE)
 #define IDMA2IBPTR (IDMA2BASE + 0x2)
 #define SMC2RBASE (SMC2BASE)
@@ -2919,6 +3462,54 @@ typedef union {
 #define _SACR_WAIT_MASK                0x00000007
 #define _SACR_WAIT_LENGTH              0x00000003
 
+#define _SCC1RFCR_MOT_POSITION         0x00000004
+#define _SCC1RFCR_MOT_MASK             0x00000001
+#define _SCC1RFCR_MOT_LENGTH           0x00000001
+
+#define _SCC1RFCR_FC3_POSITION         0x00000003
+#define _SCC1RFCR_FC3_MASK             0x00000001
+#define _SCC1RFCR_FC3_LENGTH           0x00000001
+
+#define _SCC1RFCR_FC2_POSITION         0x00000002
+#define _SCC1RFCR_FC2_MASK             0x00000001
+#define _SCC1RFCR_FC2_LENGTH           0x00000001
+
+#define _SCC1RFCR_FC1_POSITION         0x00000001
+#define _SCC1RFCR_FC1_MASK             0x00000001
+#define _SCC1RFCR_FC1_LENGTH           0x00000001
+
+#define _SCC1RFCR_FC0_POSITION         0x00000000
+#define _SCC1RFCR_FC0_MASK             0x00000001
+#define _SCC1RFCR_FC0_LENGTH           0x00000001
+
+#define _SCC1RFCR_FC_POSITION          0x00000000
+#define _SCC1RFCR_FC_MASK              0x0000000F
+#define _SCC1RFCR_FC_LENGTH            0x00000004
+
+#define _SCC2RFCR_MOT_POSITION         0x00000004
+#define _SCC2RFCR_MOT_MASK             0x00000001
+#define _SCC2RFCR_MOT_LENGTH           0x00000001
+
+#define _SCC2RFCR_FC3_POSITION         0x00000003
+#define _SCC2RFCR_FC3_MASK             0x00000001
+#define _SCC2RFCR_FC3_LENGTH           0x00000001
+
+#define _SCC2RFCR_FC2_POSITION         0x00000002
+#define _SCC2RFCR_FC2_MASK             0x00000001
+#define _SCC2RFCR_FC2_LENGTH           0x00000001
+
+#define _SCC2RFCR_FC1_POSITION         0x00000001
+#define _SCC2RFCR_FC1_MASK             0x00000001
+#define _SCC2RFCR_FC1_LENGTH           0x00000001
+
+#define _SCC2RFCR_FC0_POSITION         0x00000000
+#define _SCC2RFCR_FC0_MASK             0x00000001
+#define _SCC2RFCR_FC0_LENGTH           0x00000001
+
+#define _SCC2RFCR_FC_POSITION          0x00000000
+#define _SCC2RFCR_FC_MASK              0x0000000F
+#define _SCC2RFCR_FC_LENGTH            0x00000004
+
 #define _SPIRFCR_MOT_POSITION          0x00000004
 #define _SPIRFCR_MOT_MASK              0x00000001
 #define _SPIRFCR_MOT_LENGTH            0x00000001
@@ -2942,6 +3533,30 @@ typedef union {
 #define _SPIRFCR_FC_POSITION           0x00000000
 #define _SPIRFCR_FC_MASK               0x0000000F
 #define _SPIRFCR_FC_LENGTH             0x00000004
+
+#define _SCC3RFCR_MOT_POSITION         0x00000004
+#define _SCC3RFCR_MOT_MASK             0x00000001
+#define _SCC3RFCR_MOT_LENGTH           0x00000001
+
+#define _SCC3RFCR_FC3_POSITION         0x00000003
+#define _SCC3RFCR_FC3_MASK             0x00000001
+#define _SCC3RFCR_FC3_LENGTH           0x00000001
+
+#define _SCC3RFCR_FC2_POSITION         0x00000002
+#define _SCC3RFCR_FC2_MASK             0x00000001
+#define _SCC3RFCR_FC2_LENGTH           0x00000001
+
+#define _SCC3RFCR_FC1_POSITION         0x00000001
+#define _SCC3RFCR_FC1_MASK             0x00000001
+#define _SCC3RFCR_FC1_LENGTH           0x00000001
+
+#define _SCC3RFCR_FC0_POSITION         0x00000000
+#define _SCC3RFCR_FC0_MASK             0x00000001
+#define _SCC3RFCR_FC0_LENGTH           0x00000001
+
+#define _SCC3RFCR_FC_POSITION          0x00000000
+#define _SCC3RFCR_FC_MASK              0x0000000F
+#define _SCC3RFCR_FC_LENGTH            0x00000004
 
 #define _SMC1RFCR_MOT_POSITION         0x00000004
 #define _SMC1RFCR_MOT_MASK             0x00000001
@@ -2967,6 +3582,30 @@ typedef union {
 #define _SMC1RFCR_FC_MASK              0x0000000F
 #define _SMC1RFCR_FC_LENGTH            0x00000004
 
+#define _SCC4RFCR_MOT_POSITION         0x00000004
+#define _SCC4RFCR_MOT_MASK             0x00000001
+#define _SCC4RFCR_MOT_LENGTH           0x00000001
+
+#define _SCC4RFCR_FC3_POSITION         0x00000003
+#define _SCC4RFCR_FC3_MASK             0x00000001
+#define _SCC4RFCR_FC3_LENGTH           0x00000001
+
+#define _SCC4RFCR_FC2_POSITION         0x00000002
+#define _SCC4RFCR_FC2_MASK             0x00000001
+#define _SCC4RFCR_FC2_LENGTH           0x00000001
+
+#define _SCC4RFCR_FC1_POSITION         0x00000001
+#define _SCC4RFCR_FC1_MASK             0x00000001
+#define _SCC4RFCR_FC1_LENGTH           0x00000001
+
+#define _SCC4RFCR_FC0_POSITION         0x00000000
+#define _SCC4RFCR_FC0_MASK             0x00000001
+#define _SCC4RFCR_FC0_LENGTH           0x00000001
+
+#define _SCC4RFCR_FC_POSITION          0x00000000
+#define _SCC4RFCR_FC_MASK              0x0000000F
+#define _SCC4RFCR_FC_LENGTH            0x00000004
+
 #define _SMC2RFCR_MOT_POSITION         0x00000004
 #define _SMC2RFCR_MOT_MASK             0x00000001
 #define _SMC2RFCR_MOT_LENGTH           0x00000001
@@ -2990,6 +3629,54 @@ typedef union {
 #define _SMC2RFCR_FC_POSITION          0x00000000
 #define _SMC2RFCR_FC_MASK              0x0000000F
 #define _SMC2RFCR_FC_LENGTH            0x00000004
+
+#define _SCC1TFCR_MOT_POSITION         0x00000004
+#define _SCC1TFCR_MOT_MASK             0x00000001
+#define _SCC1TFCR_MOT_LENGTH           0x00000001
+
+#define _SCC1TFCR_FC3_POSITION         0x00000003
+#define _SCC1TFCR_FC3_MASK             0x00000001
+#define _SCC1TFCR_FC3_LENGTH           0x00000001
+
+#define _SCC1TFCR_FC2_POSITION         0x00000002
+#define _SCC1TFCR_FC2_MASK             0x00000001
+#define _SCC1TFCR_FC2_LENGTH           0x00000001
+
+#define _SCC1TFCR_FC1_POSITION         0x00000001
+#define _SCC1TFCR_FC1_MASK             0x00000001
+#define _SCC1TFCR_FC1_LENGTH           0x00000001
+
+#define _SCC1TFCR_FC0_POSITION         0x00000000
+#define _SCC1TFCR_FC0_MASK             0x00000001
+#define _SCC1TFCR_FC0_LENGTH           0x00000001
+
+#define _SCC1TFCR_FC_POSITION          0x00000000
+#define _SCC1TFCR_FC_MASK              0x0000000F
+#define _SCC1TFCR_FC_LENGTH            0x00000004
+
+#define _SCC2TFCR_MOT_POSITION         0x00000004
+#define _SCC2TFCR_MOT_MASK             0x00000001
+#define _SCC2TFCR_MOT_LENGTH           0x00000001
+
+#define _SCC2TFCR_FC3_POSITION         0x00000003
+#define _SCC2TFCR_FC3_MASK             0x00000001
+#define _SCC2TFCR_FC3_LENGTH           0x00000001
+
+#define _SCC2TFCR_FC2_POSITION         0x00000002
+#define _SCC2TFCR_FC2_MASK             0x00000001
+#define _SCC2TFCR_FC2_LENGTH           0x00000001
+
+#define _SCC2TFCR_FC1_POSITION         0x00000001
+#define _SCC2TFCR_FC1_MASK             0x00000001
+#define _SCC2TFCR_FC1_LENGTH           0x00000001
+
+#define _SCC2TFCR_FC0_POSITION         0x00000000
+#define _SCC2TFCR_FC0_MASK             0x00000001
+#define _SCC2TFCR_FC0_LENGTH           0x00000001
+
+#define _SCC2TFCR_FC_POSITION          0x00000000
+#define _SCC2TFCR_FC_MASK              0x0000000F
+#define _SCC2TFCR_FC_LENGTH            0x00000004
 
 #define _SPITFCR_MOT_POSITION          0x00000004
 #define _SPITFCR_MOT_MASK              0x00000001
@@ -3015,6 +3702,30 @@ typedef union {
 #define _SPITFCR_FC_MASK               0x0000000F
 #define _SPITFCR_FC_LENGTH             0x00000004
 
+#define _SCC3TFCR_MOT_POSITION         0x00000004
+#define _SCC3TFCR_MOT_MASK             0x00000001
+#define _SCC3TFCR_MOT_LENGTH           0x00000001
+
+#define _SCC3TFCR_FC3_POSITION         0x00000003
+#define _SCC3TFCR_FC3_MASK             0x00000001
+#define _SCC3TFCR_FC3_LENGTH           0x00000001
+
+#define _SCC3TFCR_FC2_POSITION         0x00000002
+#define _SCC3TFCR_FC2_MASK             0x00000001
+#define _SCC3TFCR_FC2_LENGTH           0x00000001
+
+#define _SCC3TFCR_FC1_POSITION         0x00000001
+#define _SCC3TFCR_FC1_MASK             0x00000001
+#define _SCC3TFCR_FC1_LENGTH           0x00000001
+
+#define _SCC3TFCR_FC0_POSITION         0x00000000
+#define _SCC3TFCR_FC0_MASK             0x00000001
+#define _SCC3TFCR_FC0_LENGTH           0x00000001
+
+#define _SCC3TFCR_FC_POSITION          0x00000000
+#define _SCC3TFCR_FC_MASK              0x0000000F
+#define _SCC3TFCR_FC_LENGTH            0x00000004
+
 #define _SMC1TFCR_MOT_POSITION         0x00000004
 #define _SMC1TFCR_MOT_MASK             0x00000001
 #define _SMC1TFCR_MOT_LENGTH           0x00000001
@@ -3038,6 +3749,30 @@ typedef union {
 #define _SMC1TFCR_FC_POSITION          0x00000000
 #define _SMC1TFCR_FC_MASK              0x0000000F
 #define _SMC1TFCR_FC_LENGTH            0x00000004
+
+#define _SCC4TFCR_MOT_POSITION         0x00000004
+#define _SCC4TFCR_MOT_MASK             0x00000001
+#define _SCC4TFCR_MOT_LENGTH           0x00000001
+
+#define _SCC4TFCR_FC3_POSITION         0x00000003
+#define _SCC4TFCR_FC3_MASK             0x00000001
+#define _SCC4TFCR_FC3_LENGTH           0x00000001
+
+#define _SCC4TFCR_FC2_POSITION         0x00000002
+#define _SCC4TFCR_FC2_MASK             0x00000001
+#define _SCC4TFCR_FC2_LENGTH           0x00000001
+
+#define _SCC4TFCR_FC1_POSITION         0x00000001
+#define _SCC4TFCR_FC1_MASK             0x00000001
+#define _SCC4TFCR_FC1_LENGTH           0x00000001
+
+#define _SCC4TFCR_FC0_POSITION         0x00000000
+#define _SCC4TFCR_FC0_MASK             0x00000001
+#define _SCC4TFCR_FC0_LENGTH           0x00000001
+
+#define _SCC4TFCR_FC_POSITION          0x00000000
+#define _SCC4TFCR_FC_MASK              0x0000000F
+#define _SCC4TFCR_FC_LENGTH            0x00000004
 
 #define _SMC2TFCR_MOT_POSITION         0x00000004
 #define _SMC2TFCR_MOT_MASK             0x00000001
@@ -9071,6 +9806,598 @@ typedef union {
 #define _GSMR4H_RSYN_MASK              0x00000001
 #define _GSMR4H_RSYN_LENGTH            0x00000001
 
+#define _PSMR1UART_FLC_POSITION        0x0000000F
+#define _PSMR1UART_FLC_MASK            0x00000001
+#define _PSMR1UART_FLC_LENGTH          0x00000001
+
+#define _PSMR1UART_SL_POSITION         0x0000000E
+#define _PSMR1UART_SL_MASK             0x00000001
+#define _PSMR1UART_SL_LENGTH           0x00000001
+
+#define _PSMR1UART_CL1_POSITION        0x0000000D
+#define _PSMR1UART_CL1_MASK            0x00000001
+#define _PSMR1UART_CL1_LENGTH          0x00000001
+
+#define _PSMR1UART_CL0_POSITION        0x0000000C
+#define _PSMR1UART_CL0_MASK            0x00000001
+#define _PSMR1UART_CL0_LENGTH          0x00000001
+
+#define _PSMR1UART_CL_POSITION         0x0000000C
+#define _PSMR1UART_CL_MASK             0x00000003
+#define _PSMR1UART_CL_LENGTH           0x00000002
+
+#define _PSMR1UART_UM1_POSITION        0x0000000B
+#define _PSMR1UART_UM1_MASK            0x00000001
+#define _PSMR1UART_UM1_LENGTH          0x00000001
+
+#define _PSMR1UART_UM0_POSITION        0x0000000A
+#define _PSMR1UART_UM0_MASK            0x00000001
+#define _PSMR1UART_UM0_LENGTH          0x00000001
+
+#define _PSMR1UART_UM_POSITION         0x0000000A
+#define _PSMR1UART_UM_MASK             0x00000003
+#define _PSMR1UART_UM_LENGTH           0x00000002
+
+#define _PSMR1UART_FRZ_POSITION        0x00000009
+#define _PSMR1UART_FRZ_MASK            0x00000001
+#define _PSMR1UART_FRZ_LENGTH          0x00000001
+
+#define _PSMR1UART_RZS_POSITION        0x00000008
+#define _PSMR1UART_RZS_MASK            0x00000001
+#define _PSMR1UART_RZS_LENGTH          0x00000001
+
+#define _PSMR1UART_SYN_POSITION        0x00000007
+#define _PSMR1UART_SYN_MASK            0x00000001
+#define _PSMR1UART_SYN_LENGTH          0x00000001
+
+#define _PSMR1UART_DRT_POSITION        0x00000006
+#define _PSMR1UART_DRT_MASK            0x00000001
+#define _PSMR1UART_DRT_LENGTH          0x00000001
+
+#define _PSMR1UART_PEN_POSITION        0x00000004
+#define _PSMR1UART_PEN_MASK            0x00000001
+#define _PSMR1UART_PEN_LENGTH          0x00000001
+
+#define _PSMR1UART_RPM1_POSITION       0x00000003
+#define _PSMR1UART_RPM1_MASK           0x00000001
+#define _PSMR1UART_RPM1_LENGTH         0x00000001
+
+#define _PSMR1UART_RPM0_POSITION       0x00000002
+#define _PSMR1UART_RPM0_MASK           0x00000001
+#define _PSMR1UART_RPM0_LENGTH         0x00000001
+
+#define _PSMR1UART_RPM_POSITION        0x00000002
+#define _PSMR1UART_RPM_MASK            0x00000003
+#define _PSMR1UART_RPM_LENGTH          0x00000002
+
+#define _PSMR1UART_TPM1_POSITION       0x00000001
+#define _PSMR1UART_TPM1_MASK           0x00000001
+#define _PSMR1UART_TPM1_LENGTH         0x00000001
+
+#define _PSMR1UART_TPM0_POSITION       0x00000000
+#define _PSMR1UART_TPM0_MASK           0x00000001
+#define _PSMR1UART_TPM0_LENGTH         0x00000001
+
+#define _PSMR1UART_TPM_POSITION        0x00000000
+#define _PSMR1UART_TPM_MASK            0x00000003
+#define _PSMR1UART_TPM_LENGTH          0x00000002
+
+#define _PSMR2UART_FLC_POSITION        0x0000000F
+#define _PSMR2UART_FLC_MASK            0x00000001
+#define _PSMR2UART_FLC_LENGTH          0x00000001
+
+#define _PSMR2UART_SL_POSITION         0x0000000E
+#define _PSMR2UART_SL_MASK             0x00000001
+#define _PSMR2UART_SL_LENGTH           0x00000001
+
+#define _PSMR2UART_CL1_POSITION        0x0000000D
+#define _PSMR2UART_CL1_MASK            0x00000001
+#define _PSMR2UART_CL1_LENGTH          0x00000001
+
+#define _PSMR2UART_CL0_POSITION        0x0000000C
+#define _PSMR2UART_CL0_MASK            0x00000001
+#define _PSMR2UART_CL0_LENGTH          0x00000001
+
+#define _PSMR2UART_CL_POSITION         0x0000000C
+#define _PSMR2UART_CL_MASK             0x00000003
+#define _PSMR2UART_CL_LENGTH           0x00000002
+
+#define _PSMR2UART_UM1_POSITION        0x0000000B
+#define _PSMR2UART_UM1_MASK            0x00000001
+#define _PSMR2UART_UM1_LENGTH          0x00000001
+
+#define _PSMR2UART_UM0_POSITION        0x0000000A
+#define _PSMR2UART_UM0_MASK            0x00000001
+#define _PSMR2UART_UM0_LENGTH          0x00000001
+
+#define _PSMR2UART_UM_POSITION         0x0000000A
+#define _PSMR2UART_UM_MASK             0x00000003
+#define _PSMR2UART_UM_LENGTH           0x00000002
+
+#define _PSMR2UART_FRZ_POSITION        0x00000009
+#define _PSMR2UART_FRZ_MASK            0x00000001
+#define _PSMR2UART_FRZ_LENGTH          0x00000001
+
+#define _PSMR2UART_RZS_POSITION        0x00000008
+#define _PSMR2UART_RZS_MASK            0x00000001
+#define _PSMR2UART_RZS_LENGTH          0x00000001
+
+#define _PSMR2UART_SYN_POSITION        0x00000007
+#define _PSMR2UART_SYN_MASK            0x00000001
+#define _PSMR2UART_SYN_LENGTH          0x00000001
+
+#define _PSMR2UART_DRT_POSITION        0x00000006
+#define _PSMR2UART_DRT_MASK            0x00000001
+#define _PSMR2UART_DRT_LENGTH          0x00000001
+
+#define _PSMR2UART_PEN_POSITION        0x00000004
+#define _PSMR2UART_PEN_MASK            0x00000001
+#define _PSMR2UART_PEN_LENGTH          0x00000001
+
+#define _PSMR2UART_RPM1_POSITION       0x00000003
+#define _PSMR2UART_RPM1_MASK           0x00000001
+#define _PSMR2UART_RPM1_LENGTH         0x00000001
+
+#define _PSMR2UART_RPM0_POSITION       0x00000002
+#define _PSMR2UART_RPM0_MASK           0x00000001
+#define _PSMR2UART_RPM0_LENGTH         0x00000001
+
+#define _PSMR2UART_RPM_POSITION        0x00000002
+#define _PSMR2UART_RPM_MASK            0x00000003
+#define _PSMR2UART_RPM_LENGTH          0x00000002
+
+#define _PSMR2UART_TPM1_POSITION       0x00000001
+#define _PSMR2UART_TPM1_MASK           0x00000001
+#define _PSMR2UART_TPM1_LENGTH         0x00000001
+
+#define _PSMR2UART_TPM0_POSITION       0x00000000
+#define _PSMR2UART_TPM0_MASK           0x00000001
+#define _PSMR2UART_TPM0_LENGTH         0x00000001
+
+#define _PSMR2UART_TPM_POSITION        0x00000000
+#define _PSMR2UART_TPM_MASK            0x00000003
+#define _PSMR2UART_TPM_LENGTH          0x00000002
+
+#define _PSMR3UART_FLC_POSITION        0x0000000F
+#define _PSMR3UART_FLC_MASK            0x00000001
+#define _PSMR3UART_FLC_LENGTH          0x00000001
+
+#define _PSMR3UART_SL_POSITION         0x0000000E
+#define _PSMR3UART_SL_MASK             0x00000001
+#define _PSMR3UART_SL_LENGTH           0x00000001
+
+#define _PSMR3UART_CL1_POSITION        0x0000000D
+#define _PSMR3UART_CL1_MASK            0x00000001
+#define _PSMR3UART_CL1_LENGTH          0x00000001
+
+#define _PSMR3UART_CL0_POSITION        0x0000000C
+#define _PSMR3UART_CL0_MASK            0x00000001
+#define _PSMR3UART_CL0_LENGTH          0x00000001
+
+#define _PSMR3UART_CL_POSITION         0x0000000C
+#define _PSMR3UART_CL_MASK             0x00000003
+#define _PSMR3UART_CL_LENGTH           0x00000002
+
+#define _PSMR3UART_UM1_POSITION        0x0000000B
+#define _PSMR3UART_UM1_MASK            0x00000001
+#define _PSMR3UART_UM1_LENGTH          0x00000001
+
+#define _PSMR3UART_UM0_POSITION        0x0000000A
+#define _PSMR3UART_UM0_MASK            0x00000001
+#define _PSMR3UART_UM0_LENGTH          0x00000001
+
+#define _PSMR3UART_UM_POSITION         0x0000000A
+#define _PSMR3UART_UM_MASK             0x00000003
+#define _PSMR3UART_UM_LENGTH           0x00000002
+
+#define _PSMR3UART_FRZ_POSITION        0x00000009
+#define _PSMR3UART_FRZ_MASK            0x00000001
+#define _PSMR3UART_FRZ_LENGTH          0x00000001
+
+#define _PSMR3UART_RZS_POSITION        0x00000008
+#define _PSMR3UART_RZS_MASK            0x00000001
+#define _PSMR3UART_RZS_LENGTH          0x00000001
+
+#define _PSMR3UART_SYN_POSITION        0x00000007
+#define _PSMR3UART_SYN_MASK            0x00000001
+#define _PSMR3UART_SYN_LENGTH          0x00000001
+
+#define _PSMR3UART_DRT_POSITION        0x00000006
+#define _PSMR3UART_DRT_MASK            0x00000001
+#define _PSMR3UART_DRT_LENGTH          0x00000001
+
+#define _PSMR3UART_PEN_POSITION        0x00000004
+#define _PSMR3UART_PEN_MASK            0x00000001
+#define _PSMR3UART_PEN_LENGTH          0x00000001
+
+#define _PSMR3UART_RPM1_POSITION       0x00000003
+#define _PSMR3UART_RPM1_MASK           0x00000001
+#define _PSMR3UART_RPM1_LENGTH         0x00000001
+
+#define _PSMR3UART_RPM0_POSITION       0x00000002
+#define _PSMR3UART_RPM0_MASK           0x00000001
+#define _PSMR3UART_RPM0_LENGTH         0x00000001
+
+#define _PSMR3UART_RPM_POSITION        0x00000002
+#define _PSMR3UART_RPM_MASK            0x00000003
+#define _PSMR3UART_RPM_LENGTH          0x00000002
+
+#define _PSMR3UART_TPM1_POSITION       0x00000001
+#define _PSMR3UART_TPM1_MASK           0x00000001
+#define _PSMR3UART_TPM1_LENGTH         0x00000001
+
+#define _PSMR3UART_TPM0_POSITION       0x00000000
+#define _PSMR3UART_TPM0_MASK           0x00000001
+#define _PSMR3UART_TPM0_LENGTH         0x00000001
+
+#define _PSMR3UART_TPM_POSITION        0x00000000
+#define _PSMR3UART_TPM_MASK            0x00000003
+#define _PSMR3UART_TPM_LENGTH          0x00000002
+
+#define _PSMR4UART_FLC_POSITION        0x0000000F
+#define _PSMR4UART_FLC_MASK            0x00000001
+#define _PSMR4UART_FLC_LENGTH          0x00000001
+
+#define _PSMR4UART_SL_POSITION         0x0000000E
+#define _PSMR4UART_SL_MASK             0x00000001
+#define _PSMR4UART_SL_LENGTH           0x00000001
+
+#define _PSMR4UART_CL1_POSITION        0x0000000D
+#define _PSMR4UART_CL1_MASK            0x00000001
+#define _PSMR4UART_CL1_LENGTH          0x00000001
+
+#define _PSMR4UART_CL0_POSITION        0x0000000C
+#define _PSMR4UART_CL0_MASK            0x00000001
+#define _PSMR4UART_CL0_LENGTH          0x00000001
+
+#define _PSMR4UART_CL_POSITION         0x0000000C
+#define _PSMR4UART_CL_MASK             0x00000003
+#define _PSMR4UART_CL_LENGTH           0x00000002
+
+#define _PSMR4UART_UM1_POSITION        0x0000000B
+#define _PSMR4UART_UM1_MASK            0x00000001
+#define _PSMR4UART_UM1_LENGTH          0x00000001
+
+#define _PSMR4UART_UM0_POSITION        0x0000000A
+#define _PSMR4UART_UM0_MASK            0x00000001
+#define _PSMR4UART_UM0_LENGTH          0x00000001
+
+#define _PSMR4UART_UM_POSITION         0x0000000A
+#define _PSMR4UART_UM_MASK             0x00000003
+#define _PSMR4UART_UM_LENGTH           0x00000002
+
+#define _PSMR4UART_FRZ_POSITION        0x00000009
+#define _PSMR4UART_FRZ_MASK            0x00000001
+#define _PSMR4UART_FRZ_LENGTH          0x00000001
+
+#define _PSMR4UART_RZS_POSITION        0x00000008
+#define _PSMR4UART_RZS_MASK            0x00000001
+#define _PSMR4UART_RZS_LENGTH          0x00000001
+
+#define _PSMR4UART_SYN_POSITION        0x00000007
+#define _PSMR4UART_SYN_MASK            0x00000001
+#define _PSMR4UART_SYN_LENGTH          0x00000001
+
+#define _PSMR4UART_DRT_POSITION        0x00000006
+#define _PSMR4UART_DRT_MASK            0x00000001
+#define _PSMR4UART_DRT_LENGTH          0x00000001
+
+#define _PSMR4UART_PEN_POSITION        0x00000004
+#define _PSMR4UART_PEN_MASK            0x00000001
+#define _PSMR4UART_PEN_LENGTH          0x00000001
+
+#define _PSMR4UART_RPM1_POSITION       0x00000003
+#define _PSMR4UART_RPM1_MASK           0x00000001
+#define _PSMR4UART_RPM1_LENGTH         0x00000001
+
+#define _PSMR4UART_RPM0_POSITION       0x00000002
+#define _PSMR4UART_RPM0_MASK           0x00000001
+#define _PSMR4UART_RPM0_LENGTH         0x00000001
+
+#define _PSMR4UART_RPM_POSITION        0x00000002
+#define _PSMR4UART_RPM_MASK            0x00000003
+#define _PSMR4UART_RPM_LENGTH          0x00000002
+
+#define _PSMR4UART_TPM1_POSITION       0x00000001
+#define _PSMR4UART_TPM1_MASK           0x00000001
+#define _PSMR4UART_TPM1_LENGTH         0x00000001
+
+#define _PSMR4UART_TPM0_POSITION       0x00000000
+#define _PSMR4UART_TPM0_MASK           0x00000001
+#define _PSMR4UART_TPM0_LENGTH         0x00000001
+
+#define _PSMR4UART_TPM_POSITION        0x00000000
+#define _PSMR4UART_TPM_MASK            0x00000003
+#define _PSMR4UART_TPM_LENGTH          0x00000002
+
+#define _PSMR1ETH_HBC_POSITION         0x0000000F
+#define _PSMR1ETH_HBC_MASK             0x00000001
+#define _PSMR1ETH_HBC_LENGTH           0x00000001
+
+#define _PSMR1ETH_FC_POSITION          0x0000000E
+#define _PSMR1ETH_FC_MASK              0x00000001
+#define _PSMR1ETH_FC_LENGTH            0x00000001
+
+#define _PSMR1ETH_RSH_POSITION         0x0000000D
+#define _PSMR1ETH_RSH_MASK             0x00000001
+#define _PSMR1ETH_RSH_LENGTH           0x00000001
+
+#define _PSMR1ETH_IAM_POSITION         0x0000000C
+#define _PSMR1ETH_IAM_MASK             0x00000001
+#define _PSMR1ETH_IAM_LENGTH           0x00000001
+
+#define _PSMR1ETH_CRC1_POSITION        0x0000000B
+#define _PSMR1ETH_CRC1_MASK            0x00000001
+#define _PSMR1ETH_CRC1_LENGTH          0x00000001
+
+#define _PSMR1ETH_CRC0_POSITION        0x0000000A
+#define _PSMR1ETH_CRC0_MASK            0x00000001
+#define _PSMR1ETH_CRC0_LENGTH          0x00000001
+
+#define _PSMR1ETH_CRC_POSITION         0x0000000A
+#define _PSMR1ETH_CRC_MASK             0x00000003
+#define _PSMR1ETH_CRC_LENGTH           0x00000002
+
+#define _PSMR1ETH_PRO_POSITION         0x00000009
+#define _PSMR1ETH_PRO_MASK             0x00000001
+#define _PSMR1ETH_PRO_LENGTH           0x00000001
+
+#define _PSMR1ETH_BRO_POSITION         0x00000008
+#define _PSMR1ETH_BRO_MASK             0x00000001
+#define _PSMR1ETH_BRO_LENGTH           0x00000001
+
+#define _PSMR1ETH_SBT_POSITION         0x00000007
+#define _PSMR1ETH_SBT_MASK             0x00000001
+#define _PSMR1ETH_SBT_LENGTH           0x00000001
+
+#define _PSMR1ETH_LPB_POSITION         0x00000006
+#define _PSMR1ETH_LPB_MASK             0x00000001
+#define _PSMR1ETH_LPB_LENGTH           0x00000001
+
+#define _PSMR1ETH_SIP_POSITION         0x00000005
+#define _PSMR1ETH_SIP_MASK             0x00000001
+#define _PSMR1ETH_SIP_LENGTH           0x00000001
+
+#define _PSMR1ETH_LCW_POSITION         0x00000004
+#define _PSMR1ETH_LCW_MASK             0x00000001
+#define _PSMR1ETH_LCW_LENGTH           0x00000001
+
+#define _PSMR1ETH_NIB2_POSITION        0x00000003
+#define _PSMR1ETH_NIB2_MASK            0x00000001
+#define _PSMR1ETH_NIB2_LENGTH          0x00000001
+
+#define _PSMR1ETH_NIB1_POSITION        0x00000002
+#define _PSMR1ETH_NIB1_MASK            0x00000001
+#define _PSMR1ETH_NIB1_LENGTH          0x00000001
+
+#define _PSMR1ETH_NIB0_POSITION        0x00000001
+#define _PSMR1ETH_NIB0_MASK            0x00000001
+#define _PSMR1ETH_NIB0_LENGTH          0x00000001
+
+#define _PSMR1ETH_NIB_POSITION         0x00000001
+#define _PSMR1ETH_NIB_MASK             0x00000007
+#define _PSMR1ETH_NIB_LENGTH           0x00000003
+
+#define _PSMR1ETH_FDE_POSITION         0x00000000
+#define _PSMR1ETH_FDE_MASK             0x00000001
+#define _PSMR1ETH_FDE_LENGTH           0x00000001
+
+#define _PSMR2ETH_HBC_POSITION         0x0000000F
+#define _PSMR2ETH_HBC_MASK             0x00000001
+#define _PSMR2ETH_HBC_LENGTH           0x00000001
+
+#define _PSMR2ETH_FC_POSITION          0x0000000E
+#define _PSMR2ETH_FC_MASK              0x00000001
+#define _PSMR2ETH_FC_LENGTH            0x00000001
+
+#define _PSMR2ETH_RSH_POSITION         0x0000000D
+#define _PSMR2ETH_RSH_MASK             0x00000001
+#define _PSMR2ETH_RSH_LENGTH           0x00000001
+
+#define _PSMR2ETH_IAM_POSITION         0x0000000C
+#define _PSMR2ETH_IAM_MASK             0x00000001
+#define _PSMR2ETH_IAM_LENGTH           0x00000001
+
+#define _PSMR2ETH_CRC1_POSITION        0x0000000B
+#define _PSMR2ETH_CRC1_MASK            0x00000001
+#define _PSMR2ETH_CRC1_LENGTH          0x00000001
+
+#define _PSMR2ETH_CRC0_POSITION        0x0000000A
+#define _PSMR2ETH_CRC0_MASK            0x00000001
+#define _PSMR2ETH_CRC0_LENGTH          0x00000001
+
+#define _PSMR2ETH_CRC_POSITION         0x0000000A
+#define _PSMR2ETH_CRC_MASK             0x00000003
+#define _PSMR2ETH_CRC_LENGTH           0x00000002
+
+#define _PSMR2ETH_PRO_POSITION         0x00000009
+#define _PSMR2ETH_PRO_MASK             0x00000001
+#define _PSMR2ETH_PRO_LENGTH           0x00000001
+
+#define _PSMR2ETH_BRO_POSITION         0x00000008
+#define _PSMR2ETH_BRO_MASK             0x00000001
+#define _PSMR2ETH_BRO_LENGTH           0x00000001
+
+#define _PSMR2ETH_SBT_POSITION         0x00000007
+#define _PSMR2ETH_SBT_MASK             0x00000001
+#define _PSMR2ETH_SBT_LENGTH           0x00000001
+
+#define _PSMR2ETH_LPB_POSITION         0x00000006
+#define _PSMR2ETH_LPB_MASK             0x00000001
+#define _PSMR2ETH_LPB_LENGTH           0x00000001
+
+#define _PSMR2ETH_SIP_POSITION         0x00000005
+#define _PSMR2ETH_SIP_MASK             0x00000001
+#define _PSMR2ETH_SIP_LENGTH           0x00000001
+
+#define _PSMR2ETH_LCW_POSITION         0x00000004
+#define _PSMR2ETH_LCW_MASK             0x00000001
+#define _PSMR2ETH_LCW_LENGTH           0x00000001
+
+#define _PSMR2ETH_NIB2_POSITION        0x00000003
+#define _PSMR2ETH_NIB2_MASK            0x00000001
+#define _PSMR2ETH_NIB2_LENGTH          0x00000001
+
+#define _PSMR2ETH_NIB1_POSITION        0x00000002
+#define _PSMR2ETH_NIB1_MASK            0x00000001
+#define _PSMR2ETH_NIB1_LENGTH          0x00000001
+
+#define _PSMR2ETH_NIB0_POSITION        0x00000001
+#define _PSMR2ETH_NIB0_MASK            0x00000001
+#define _PSMR2ETH_NIB0_LENGTH          0x00000001
+
+#define _PSMR2ETH_NIB_POSITION         0x00000001
+#define _PSMR2ETH_NIB_MASK             0x00000007
+#define _PSMR2ETH_NIB_LENGTH           0x00000003
+
+#define _PSMR2ETH_FDE_POSITION         0x00000000
+#define _PSMR2ETH_FDE_MASK             0x00000001
+#define _PSMR2ETH_FDE_LENGTH           0x00000001
+
+#define _PSMR3ETH_HBC_POSITION         0x0000000F
+#define _PSMR3ETH_HBC_MASK             0x00000001
+#define _PSMR3ETH_HBC_LENGTH           0x00000001
+
+#define _PSMR3ETH_FC_POSITION          0x0000000E
+#define _PSMR3ETH_FC_MASK              0x00000001
+#define _PSMR3ETH_FC_LENGTH            0x00000001
+
+#define _PSMR3ETH_RSH_POSITION         0x0000000D
+#define _PSMR3ETH_RSH_MASK             0x00000001
+#define _PSMR3ETH_RSH_LENGTH           0x00000001
+
+#define _PSMR3ETH_IAM_POSITION         0x0000000C
+#define _PSMR3ETH_IAM_MASK             0x00000001
+#define _PSMR3ETH_IAM_LENGTH           0x00000001
+
+#define _PSMR3ETH_CRC1_POSITION        0x0000000B
+#define _PSMR3ETH_CRC1_MASK            0x00000001
+#define _PSMR3ETH_CRC1_LENGTH          0x00000001
+
+#define _PSMR3ETH_CRC0_POSITION        0x0000000A
+#define _PSMR3ETH_CRC0_MASK            0x00000001
+#define _PSMR3ETH_CRC0_LENGTH          0x00000001
+
+#define _PSMR3ETH_CRC_POSITION         0x0000000A
+#define _PSMR3ETH_CRC_MASK             0x00000003
+#define _PSMR3ETH_CRC_LENGTH           0x00000002
+
+#define _PSMR3ETH_PRO_POSITION         0x00000009
+#define _PSMR3ETH_PRO_MASK             0x00000001
+#define _PSMR3ETH_PRO_LENGTH           0x00000001
+
+#define _PSMR3ETH_BRO_POSITION         0x00000008
+#define _PSMR3ETH_BRO_MASK             0x00000001
+#define _PSMR3ETH_BRO_LENGTH           0x00000001
+
+#define _PSMR3ETH_SBT_POSITION         0x00000007
+#define _PSMR3ETH_SBT_MASK             0x00000001
+#define _PSMR3ETH_SBT_LENGTH           0x00000001
+
+#define _PSMR3ETH_LPB_POSITION         0x00000006
+#define _PSMR3ETH_LPB_MASK             0x00000001
+#define _PSMR3ETH_LPB_LENGTH           0x00000001
+
+#define _PSMR3ETH_SIP_POSITION         0x00000005
+#define _PSMR3ETH_SIP_MASK             0x00000001
+#define _PSMR3ETH_SIP_LENGTH           0x00000001
+
+#define _PSMR3ETH_LCW_POSITION         0x00000004
+#define _PSMR3ETH_LCW_MASK             0x00000001
+#define _PSMR3ETH_LCW_LENGTH           0x00000001
+
+#define _PSMR3ETH_NIB2_POSITION        0x00000003
+#define _PSMR3ETH_NIB2_MASK            0x00000001
+#define _PSMR3ETH_NIB2_LENGTH          0x00000001
+
+#define _PSMR3ETH_NIB1_POSITION        0x00000002
+#define _PSMR3ETH_NIB1_MASK            0x00000001
+#define _PSMR3ETH_NIB1_LENGTH          0x00000001
+
+#define _PSMR3ETH_NIB0_POSITION        0x00000001
+#define _PSMR3ETH_NIB0_MASK            0x00000001
+#define _PSMR3ETH_NIB0_LENGTH          0x00000001
+
+#define _PSMR3ETH_NIB_POSITION         0x00000001
+#define _PSMR3ETH_NIB_MASK             0x00000007
+#define _PSMR3ETH_NIB_LENGTH           0x00000003
+
+#define _PSMR3ETH_FDE_POSITION         0x00000000
+#define _PSMR3ETH_FDE_MASK             0x00000001
+#define _PSMR3ETH_FDE_LENGTH           0x00000001
+
+#define _PSMR4ETH_HBC_POSITION         0x0000000F
+#define _PSMR4ETH_HBC_MASK             0x00000001
+#define _PSMR4ETH_HBC_LENGTH           0x00000001
+
+#define _PSMR4ETH_FC_POSITION          0x0000000E
+#define _PSMR4ETH_FC_MASK              0x00000001
+#define _PSMR4ETH_FC_LENGTH            0x00000001
+
+#define _PSMR4ETH_RSH_POSITION         0x0000000D
+#define _PSMR4ETH_RSH_MASK             0x00000001
+#define _PSMR4ETH_RSH_LENGTH           0x00000001
+
+#define _PSMR4ETH_IAM_POSITION         0x0000000C
+#define _PSMR4ETH_IAM_MASK             0x00000001
+#define _PSMR4ETH_IAM_LENGTH           0x00000001
+
+#define _PSMR4ETH_CRC1_POSITION        0x0000000B
+#define _PSMR4ETH_CRC1_MASK            0x00000001
+#define _PSMR4ETH_CRC1_LENGTH          0x00000001
+
+#define _PSMR4ETH_CRC0_POSITION        0x0000000A
+#define _PSMR4ETH_CRC0_MASK            0x00000001
+#define _PSMR4ETH_CRC0_LENGTH          0x00000001
+
+#define _PSMR4ETH_CRC_POSITION         0x0000000A
+#define _PSMR4ETH_CRC_MASK             0x00000003
+#define _PSMR4ETH_CRC_LENGTH           0x00000002
+
+#define _PSMR4ETH_PRO_POSITION         0x00000009
+#define _PSMR4ETH_PRO_MASK             0x00000001
+#define _PSMR4ETH_PRO_LENGTH           0x00000001
+
+#define _PSMR4ETH_BRO_POSITION         0x00000008
+#define _PSMR4ETH_BRO_MASK             0x00000001
+#define _PSMR4ETH_BRO_LENGTH           0x00000001
+
+#define _PSMR4ETH_SBT_POSITION         0x00000007
+#define _PSMR4ETH_SBT_MASK             0x00000001
+#define _PSMR4ETH_SBT_LENGTH           0x00000001
+
+#define _PSMR4ETH_LPB_POSITION         0x00000006
+#define _PSMR4ETH_LPB_MASK             0x00000001
+#define _PSMR4ETH_LPB_LENGTH           0x00000001
+
+#define _PSMR4ETH_SIP_POSITION         0x00000005
+#define _PSMR4ETH_SIP_MASK             0x00000001
+#define _PSMR4ETH_SIP_LENGTH           0x00000001
+
+#define _PSMR4ETH_LCW_POSITION         0x00000004
+#define _PSMR4ETH_LCW_MASK             0x00000001
+#define _PSMR4ETH_LCW_LENGTH           0x00000001
+
+#define _PSMR4ETH_NIB2_POSITION        0x00000003
+#define _PSMR4ETH_NIB2_MASK            0x00000001
+#define _PSMR4ETH_NIB2_LENGTH          0x00000001
+
+#define _PSMR4ETH_NIB1_POSITION        0x00000002
+#define _PSMR4ETH_NIB1_MASK            0x00000001
+#define _PSMR4ETH_NIB1_LENGTH          0x00000001
+
+#define _PSMR4ETH_NIB0_POSITION        0x00000001
+#define _PSMR4ETH_NIB0_MASK            0x00000001
+#define _PSMR4ETH_NIB0_LENGTH          0x00000001
+
+#define _PSMR4ETH_NIB_POSITION         0x00000001
+#define _PSMR4ETH_NIB_MASK             0x00000007
+#define _PSMR4ETH_NIB_LENGTH           0x00000003
+
+#define _PSMR4ETH_FDE_POSITION         0x00000000
+#define _PSMR4ETH_FDE_MASK             0x00000001
+#define _PSMR4ETH_FDE_LENGTH           0x00000001
+
 #define _TODR1_TOD_POSITION            0x0000000F
 #define _TODR1_TOD_MASK                0x00000001
 #define _TODR1_TOD_LENGTH              0x00000001
@@ -9118,6 +10445,550 @@ typedef union {
 #define _DSR4_SYN1_POSITION            0x00000000
 #define _DSR4_SYN1_MASK                0x000000FF
 #define _DSR4_SYN1_LENGTH              0x00000008
+
+#define _SCCE1UART_GLR_POSITION        0x0000000C
+#define _SCCE1UART_GLR_MASK            0x00000001
+#define _SCCE1UART_GLR_LENGTH          0x00000001
+
+#define _SCCE1UART_GLT_POSITION        0x0000000B
+#define _SCCE1UART_GLT_MASK            0x00000001
+#define _SCCE1UART_GLT_LENGTH          0x00000001
+
+#define _SCCE1UART_AB_POSITION         0x00000009
+#define _SCCE1UART_AB_MASK             0x00000001
+#define _SCCE1UART_AB_LENGTH           0x00000001
+
+#define _SCCE1UART_IDL_POSITION        0x00000008
+#define _SCCE1UART_IDL_MASK            0x00000001
+#define _SCCE1UART_IDL_LENGTH          0x00000001
+
+#define _SCCE1UART_GRA_POSITION        0x00000007
+#define _SCCE1UART_GRA_MASK            0x00000001
+#define _SCCE1UART_GRA_LENGTH          0x00000001
+
+#define _SCCE1UART_BRKE_POSITION       0x00000006
+#define _SCCE1UART_BRKE_MASK           0x00000001
+#define _SCCE1UART_BRKE_LENGTH         0x00000001
+
+#define _SCCE1UART_BRKS_POSITION       0x00000005
+#define _SCCE1UART_BRKS_MASK           0x00000001
+#define _SCCE1UART_BRKS_LENGTH         0x00000001
+
+#define _SCCE1UART_CCR_POSITION        0x00000003
+#define _SCCE1UART_CCR_MASK            0x00000001
+#define _SCCE1UART_CCR_LENGTH          0x00000001
+
+#define _SCCE1UART_BSY_POSITION        0x00000002
+#define _SCCE1UART_BSY_MASK            0x00000001
+#define _SCCE1UART_BSY_LENGTH          0x00000001
+
+#define _SCCE1UART_TX_POSITION         0x00000001
+#define _SCCE1UART_TX_MASK             0x00000001
+#define _SCCE1UART_TX_LENGTH           0x00000001
+
+#define _SCCE1UART_RX_POSITION         0x00000000
+#define _SCCE1UART_RX_MASK             0x00000001
+#define _SCCE1UART_RX_LENGTH           0x00000001
+
+#define _SCCE2UART_GLR_POSITION        0x0000000C
+#define _SCCE2UART_GLR_MASK            0x00000001
+#define _SCCE2UART_GLR_LENGTH          0x00000001
+
+#define _SCCE2UART_GLT_POSITION        0x0000000B
+#define _SCCE2UART_GLT_MASK            0x00000001
+#define _SCCE2UART_GLT_LENGTH          0x00000001
+
+#define _SCCE2UART_AB_POSITION         0x00000009
+#define _SCCE2UART_AB_MASK             0x00000001
+#define _SCCE2UART_AB_LENGTH           0x00000001
+
+#define _SCCE2UART_IDL_POSITION        0x00000008
+#define _SCCE2UART_IDL_MASK            0x00000001
+#define _SCCE2UART_IDL_LENGTH          0x00000001
+
+#define _SCCE2UART_GRA_POSITION        0x00000007
+#define _SCCE2UART_GRA_MASK            0x00000001
+#define _SCCE2UART_GRA_LENGTH          0x00000001
+
+#define _SCCE2UART_BRKE_POSITION       0x00000006
+#define _SCCE2UART_BRKE_MASK           0x00000001
+#define _SCCE2UART_BRKE_LENGTH         0x00000001
+
+#define _SCCE2UART_BRKS_POSITION       0x00000005
+#define _SCCE2UART_BRKS_MASK           0x00000001
+#define _SCCE2UART_BRKS_LENGTH         0x00000001
+
+#define _SCCE2UART_CCR_POSITION        0x00000003
+#define _SCCE2UART_CCR_MASK            0x00000001
+#define _SCCE2UART_CCR_LENGTH          0x00000001
+
+#define _SCCE2UART_BSY_POSITION        0x00000002
+#define _SCCE2UART_BSY_MASK            0x00000001
+#define _SCCE2UART_BSY_LENGTH          0x00000001
+
+#define _SCCE2UART_TX_POSITION         0x00000001
+#define _SCCE2UART_TX_MASK             0x00000001
+#define _SCCE2UART_TX_LENGTH           0x00000001
+
+#define _SCCE2UART_RX_POSITION         0x00000000
+#define _SCCE2UART_RX_MASK             0x00000001
+#define _SCCE2UART_RX_LENGTH           0x00000001
+
+#define _SCCE3UART_GLR_POSITION        0x0000000C
+#define _SCCE3UART_GLR_MASK            0x00000001
+#define _SCCE3UART_GLR_LENGTH          0x00000001
+
+#define _SCCE3UART_GLT_POSITION        0x0000000B
+#define _SCCE3UART_GLT_MASK            0x00000001
+#define _SCCE3UART_GLT_LENGTH          0x00000001
+
+#define _SCCE3UART_AB_POSITION         0x00000009
+#define _SCCE3UART_AB_MASK             0x00000001
+#define _SCCE3UART_AB_LENGTH           0x00000001
+
+#define _SCCE3UART_IDL_POSITION        0x00000008
+#define _SCCE3UART_IDL_MASK            0x00000001
+#define _SCCE3UART_IDL_LENGTH          0x00000001
+
+#define _SCCE3UART_GRA_POSITION        0x00000007
+#define _SCCE3UART_GRA_MASK            0x00000001
+#define _SCCE3UART_GRA_LENGTH          0x00000001
+
+#define _SCCE3UART_BRKE_POSITION       0x00000006
+#define _SCCE3UART_BRKE_MASK           0x00000001
+#define _SCCE3UART_BRKE_LENGTH         0x00000001
+
+#define _SCCE3UART_BRKS_POSITION       0x00000005
+#define _SCCE3UART_BRKS_MASK           0x00000001
+#define _SCCE3UART_BRKS_LENGTH         0x00000001
+
+#define _SCCE3UART_CCR_POSITION        0x00000003
+#define _SCCE3UART_CCR_MASK            0x00000001
+#define _SCCE3UART_CCR_LENGTH          0x00000001
+
+#define _SCCE3UART_BSY_POSITION        0x00000002
+#define _SCCE3UART_BSY_MASK            0x00000001
+#define _SCCE3UART_BSY_LENGTH          0x00000001
+
+#define _SCCE3UART_TX_POSITION         0x00000001
+#define _SCCE3UART_TX_MASK             0x00000001
+#define _SCCE3UART_TX_LENGTH           0x00000001
+
+#define _SCCE3UART_RX_POSITION         0x00000000
+#define _SCCE3UART_RX_MASK             0x00000001
+#define _SCCE3UART_RX_LENGTH           0x00000001
+
+#define _SCCE4UART_GLR_POSITION        0x0000000C
+#define _SCCE4UART_GLR_MASK            0x00000001
+#define _SCCE4UART_GLR_LENGTH          0x00000001
+
+#define _SCCE4UART_GLT_POSITION        0x0000000B
+#define _SCCE4UART_GLT_MASK            0x00000001
+#define _SCCE4UART_GLT_LENGTH          0x00000001
+
+#define _SCCE4UART_AB_POSITION         0x00000009
+#define _SCCE4UART_AB_MASK             0x00000001
+#define _SCCE4UART_AB_LENGTH           0x00000001
+
+#define _SCCE4UART_IDL_POSITION        0x00000008
+#define _SCCE4UART_IDL_MASK            0x00000001
+#define _SCCE4UART_IDL_LENGTH          0x00000001
+
+#define _SCCE4UART_GRA_POSITION        0x00000007
+#define _SCCE4UART_GRA_MASK            0x00000001
+#define _SCCE4UART_GRA_LENGTH          0x00000001
+
+#define _SCCE4UART_BRKE_POSITION       0x00000006
+#define _SCCE4UART_BRKE_MASK           0x00000001
+#define _SCCE4UART_BRKE_LENGTH         0x00000001
+
+#define _SCCE4UART_BRKS_POSITION       0x00000005
+#define _SCCE4UART_BRKS_MASK           0x00000001
+#define _SCCE4UART_BRKS_LENGTH         0x00000001
+
+#define _SCCE4UART_CCR_POSITION        0x00000003
+#define _SCCE4UART_CCR_MASK            0x00000001
+#define _SCCE4UART_CCR_LENGTH          0x00000001
+
+#define _SCCE4UART_BSY_POSITION        0x00000002
+#define _SCCE4UART_BSY_MASK            0x00000001
+#define _SCCE4UART_BSY_LENGTH          0x00000001
+
+#define _SCCE4UART_TX_POSITION         0x00000001
+#define _SCCE4UART_TX_MASK             0x00000001
+#define _SCCE4UART_TX_LENGTH           0x00000001
+
+#define _SCCE4UART_RX_POSITION         0x00000000
+#define _SCCE4UART_RX_MASK             0x00000001
+#define _SCCE4UART_RX_LENGTH           0x00000001
+
+#define _SCCE1ETH_GRA_POSITION         0x00000007
+#define _SCCE1ETH_GRA_MASK             0x00000001
+#define _SCCE1ETH_GRA_LENGTH           0x00000001
+
+#define _SCCE1ETH_TXE_POSITION         0x00000004
+#define _SCCE1ETH_TXE_MASK             0x00000001
+#define _SCCE1ETH_TXE_LENGTH           0x00000001
+
+#define _SCCE1ETH_RXF_POSITION         0x00000003
+#define _SCCE1ETH_RXF_MASK             0x00000001
+#define _SCCE1ETH_RXF_LENGTH           0x00000001
+
+#define _SCCE1ETH_BSY_POSITION         0x00000002
+#define _SCCE1ETH_BSY_MASK             0x00000001
+#define _SCCE1ETH_BSY_LENGTH           0x00000001
+
+#define _SCCE1ETH_TXB_POSITION         0x00000001
+#define _SCCE1ETH_TXB_MASK             0x00000001
+#define _SCCE1ETH_TXB_LENGTH           0x00000001
+
+#define _SCCE1ETH_RXB_POSITION         0x00000000
+#define _SCCE1ETH_RXB_MASK             0x00000001
+#define _SCCE1ETH_RXB_LENGTH           0x00000001
+
+#define _SCCE2ETH_GRA_POSITION         0x00000007
+#define _SCCE2ETH_GRA_MASK             0x00000001
+#define _SCCE2ETH_GRA_LENGTH           0x00000001
+
+#define _SCCE2ETH_TXE_POSITION         0x00000004
+#define _SCCE2ETH_TXE_MASK             0x00000001
+#define _SCCE2ETH_TXE_LENGTH           0x00000001
+
+#define _SCCE2ETH_RXF_POSITION         0x00000003
+#define _SCCE2ETH_RXF_MASK             0x00000001
+#define _SCCE2ETH_RXF_LENGTH           0x00000001
+
+#define _SCCE2ETH_BSY_POSITION         0x00000002
+#define _SCCE2ETH_BSY_MASK             0x00000001
+#define _SCCE2ETH_BSY_LENGTH           0x00000001
+
+#define _SCCE2ETH_TXB_POSITION         0x00000001
+#define _SCCE2ETH_TXB_MASK             0x00000001
+#define _SCCE2ETH_TXB_LENGTH           0x00000001
+
+#define _SCCE2ETH_RXB_POSITION         0x00000000
+#define _SCCE2ETH_RXB_MASK             0x00000001
+#define _SCCE2ETH_RXB_LENGTH           0x00000001
+
+#define _SCCE3ETH_GRA_POSITION         0x00000007
+#define _SCCE3ETH_GRA_MASK             0x00000001
+#define _SCCE3ETH_GRA_LENGTH           0x00000001
+
+#define _SCCE3ETH_TXE_POSITION         0x00000004
+#define _SCCE3ETH_TXE_MASK             0x00000001
+#define _SCCE3ETH_TXE_LENGTH           0x00000001
+
+#define _SCCE3ETH_RXF_POSITION         0x00000003
+#define _SCCE3ETH_RXF_MASK             0x00000001
+#define _SCCE3ETH_RXF_LENGTH           0x00000001
+
+#define _SCCE3ETH_BSY_POSITION         0x00000002
+#define _SCCE3ETH_BSY_MASK             0x00000001
+#define _SCCE3ETH_BSY_LENGTH           0x00000001
+
+#define _SCCE3ETH_TXB_POSITION         0x00000001
+#define _SCCE3ETH_TXB_MASK             0x00000001
+#define _SCCE3ETH_TXB_LENGTH           0x00000001
+
+#define _SCCE3ETH_RXB_POSITION         0x00000000
+#define _SCCE3ETH_RXB_MASK             0x00000001
+#define _SCCE3ETH_RXB_LENGTH           0x00000001
+
+#define _SCCE4ETH_GRA_POSITION         0x00000007
+#define _SCCE4ETH_GRA_MASK             0x00000001
+#define _SCCE4ETH_GRA_LENGTH           0x00000001
+
+#define _SCCE4ETH_TXE_POSITION         0x00000004
+#define _SCCE4ETH_TXE_MASK             0x00000001
+#define _SCCE4ETH_TXE_LENGTH           0x00000001
+
+#define _SCCE4ETH_RXF_POSITION         0x00000003
+#define _SCCE4ETH_RXF_MASK             0x00000001
+#define _SCCE4ETH_RXF_LENGTH           0x00000001
+
+#define _SCCE4ETH_BSY_POSITION         0x00000002
+#define _SCCE4ETH_BSY_MASK             0x00000001
+#define _SCCE4ETH_BSY_LENGTH           0x00000001
+
+#define _SCCE4ETH_TXB_POSITION         0x00000001
+#define _SCCE4ETH_TXB_MASK             0x00000001
+#define _SCCE4ETH_TXB_LENGTH           0x00000001
+
+#define _SCCE4ETH_RXB_POSITION         0x00000000
+#define _SCCE4ETH_RXB_MASK             0x00000001
+#define _SCCE4ETH_RXB_LENGTH           0x00000001
+
+#define _SCCM1UART_GLR_POSITION        0x0000000C
+#define _SCCM1UART_GLR_MASK            0x00000001
+#define _SCCM1UART_GLR_LENGTH          0x00000001
+
+#define _SCCM1UART_GLT_POSITION        0x0000000B
+#define _SCCM1UART_GLT_MASK            0x00000001
+#define _SCCM1UART_GLT_LENGTH          0x00000001
+
+#define _SCCM1UART_AB_POSITION         0x00000009
+#define _SCCM1UART_AB_MASK             0x00000001
+#define _SCCM1UART_AB_LENGTH           0x00000001
+
+#define _SCCM1UART_IDL_POSITION        0x00000008
+#define _SCCM1UART_IDL_MASK            0x00000001
+#define _SCCM1UART_IDL_LENGTH          0x00000001
+
+#define _SCCM1UART_GRA_POSITION        0x00000007
+#define _SCCM1UART_GRA_MASK            0x00000001
+#define _SCCM1UART_GRA_LENGTH          0x00000001
+
+#define _SCCM1UART_BRKE_POSITION       0x00000006
+#define _SCCM1UART_BRKE_MASK           0x00000001
+#define _SCCM1UART_BRKE_LENGTH         0x00000001
+
+#define _SCCM1UART_BRKS_POSITION       0x00000005
+#define _SCCM1UART_BRKS_MASK           0x00000001
+#define _SCCM1UART_BRKS_LENGTH         0x00000001
+
+#define _SCCM1UART_CCR_POSITION        0x00000003
+#define _SCCM1UART_CCR_MASK            0x00000001
+#define _SCCM1UART_CCR_LENGTH          0x00000001
+
+#define _SCCM1UART_BSY_POSITION        0x00000002
+#define _SCCM1UART_BSY_MASK            0x00000001
+#define _SCCM1UART_BSY_LENGTH          0x00000001
+
+#define _SCCM1UART_TX_POSITION         0x00000001
+#define _SCCM1UART_TX_MASK             0x00000001
+#define _SCCM1UART_TX_LENGTH           0x00000001
+
+#define _SCCM1UART_RX_POSITION         0x00000000
+#define _SCCM1UART_RX_MASK             0x00000001
+#define _SCCM1UART_RX_LENGTH           0x00000001
+
+#define _SCCM2UART_GLR_POSITION        0x0000000C
+#define _SCCM2UART_GLR_MASK            0x00000001
+#define _SCCM2UART_GLR_LENGTH          0x00000001
+
+#define _SCCM2UART_GLT_POSITION        0x0000000B
+#define _SCCM2UART_GLT_MASK            0x00000001
+#define _SCCM2UART_GLT_LENGTH          0x00000001
+
+#define _SCCM2UART_AB_POSITION         0x00000009
+#define _SCCM2UART_AB_MASK             0x00000001
+#define _SCCM2UART_AB_LENGTH           0x00000001
+
+#define _SCCM2UART_IDL_POSITION        0x00000008
+#define _SCCM2UART_IDL_MASK            0x00000001
+#define _SCCM2UART_IDL_LENGTH          0x00000001
+
+#define _SCCM2UART_GRA_POSITION        0x00000007
+#define _SCCM2UART_GRA_MASK            0x00000001
+#define _SCCM2UART_GRA_LENGTH          0x00000001
+
+#define _SCCM2UART_BRKE_POSITION       0x00000006
+#define _SCCM2UART_BRKE_MASK           0x00000001
+#define _SCCM2UART_BRKE_LENGTH         0x00000001
+
+#define _SCCM2UART_BRKS_POSITION       0x00000005
+#define _SCCM2UART_BRKS_MASK           0x00000001
+#define _SCCM2UART_BRKS_LENGTH         0x00000001
+
+#define _SCCM2UART_CCR_POSITION        0x00000003
+#define _SCCM2UART_CCR_MASK            0x00000001
+#define _SCCM2UART_CCR_LENGTH          0x00000001
+
+#define _SCCM2UART_BSY_POSITION        0x00000002
+#define _SCCM2UART_BSY_MASK            0x00000001
+#define _SCCM2UART_BSY_LENGTH          0x00000001
+
+#define _SCCM2UART_TX_POSITION         0x00000001
+#define _SCCM2UART_TX_MASK             0x00000001
+#define _SCCM2UART_TX_LENGTH           0x00000001
+
+#define _SCCM2UART_RX_POSITION         0x00000000
+#define _SCCM2UART_RX_MASK             0x00000001
+#define _SCCM2UART_RX_LENGTH           0x00000001
+
+#define _SCCM3UART_GLR_POSITION        0x0000000C
+#define _SCCM3UART_GLR_MASK            0x00000001
+#define _SCCM3UART_GLR_LENGTH          0x00000001
+
+#define _SCCM3UART_GLT_POSITION        0x0000000B
+#define _SCCM3UART_GLT_MASK            0x00000001
+#define _SCCM3UART_GLT_LENGTH          0x00000001
+
+#define _SCCM3UART_AB_POSITION         0x00000009
+#define _SCCM3UART_AB_MASK             0x00000001
+#define _SCCM3UART_AB_LENGTH           0x00000001
+
+#define _SCCM3UART_IDL_POSITION        0x00000008
+#define _SCCM3UART_IDL_MASK            0x00000001
+#define _SCCM3UART_IDL_LENGTH          0x00000001
+
+#define _SCCM3UART_GRA_POSITION        0x00000007
+#define _SCCM3UART_GRA_MASK            0x00000001
+#define _SCCM3UART_GRA_LENGTH          0x00000001
+
+#define _SCCM3UART_BRKE_POSITION       0x00000006
+#define _SCCM3UART_BRKE_MASK           0x00000001
+#define _SCCM3UART_BRKE_LENGTH         0x00000001
+
+#define _SCCM3UART_BRKS_POSITION       0x00000005
+#define _SCCM3UART_BRKS_MASK           0x00000001
+#define _SCCM3UART_BRKS_LENGTH         0x00000001
+
+#define _SCCM3UART_CCR_POSITION        0x00000003
+#define _SCCM3UART_CCR_MASK            0x00000001
+#define _SCCM3UART_CCR_LENGTH          0x00000001
+
+#define _SCCM3UART_BSY_POSITION        0x00000002
+#define _SCCM3UART_BSY_MASK            0x00000001
+#define _SCCM3UART_BSY_LENGTH          0x00000001
+
+#define _SCCM3UART_TX_POSITION         0x00000001
+#define _SCCM3UART_TX_MASK             0x00000001
+#define _SCCM3UART_TX_LENGTH           0x00000001
+
+#define _SCCM3UART_RX_POSITION         0x00000000
+#define _SCCM3UART_RX_MASK             0x00000001
+#define _SCCM3UART_RX_LENGTH           0x00000001
+
+#define _SCCM4UART_GLR_POSITION        0x0000000C
+#define _SCCM4UART_GLR_MASK            0x00000001
+#define _SCCM4UART_GLR_LENGTH          0x00000001
+
+#define _SCCM4UART_GLT_POSITION        0x0000000B
+#define _SCCM4UART_GLT_MASK            0x00000001
+#define _SCCM4UART_GLT_LENGTH          0x00000001
+
+#define _SCCM4UART_AB_POSITION         0x00000009
+#define _SCCM4UART_AB_MASK             0x00000001
+#define _SCCM4UART_AB_LENGTH           0x00000001
+
+#define _SCCM4UART_IDL_POSITION        0x00000008
+#define _SCCM4UART_IDL_MASK            0x00000001
+#define _SCCM4UART_IDL_LENGTH          0x00000001
+
+#define _SCCM4UART_GRA_POSITION        0x00000007
+#define _SCCM4UART_GRA_MASK            0x00000001
+#define _SCCM4UART_GRA_LENGTH          0x00000001
+
+#define _SCCM4UART_BRKE_POSITION       0x00000006
+#define _SCCM4UART_BRKE_MASK           0x00000001
+#define _SCCM4UART_BRKE_LENGTH         0x00000001
+
+#define _SCCM4UART_BRKS_POSITION       0x00000005
+#define _SCCM4UART_BRKS_MASK           0x00000001
+#define _SCCM4UART_BRKS_LENGTH         0x00000001
+
+#define _SCCM4UART_CCR_POSITION        0x00000003
+#define _SCCM4UART_CCR_MASK            0x00000001
+#define _SCCM4UART_CCR_LENGTH          0x00000001
+
+#define _SCCM4UART_BSY_POSITION        0x00000002
+#define _SCCM4UART_BSY_MASK            0x00000001
+#define _SCCM4UART_BSY_LENGTH          0x00000001
+
+#define _SCCM4UART_TX_POSITION         0x00000001
+#define _SCCM4UART_TX_MASK             0x00000001
+#define _SCCM4UART_TX_LENGTH           0x00000001
+
+#define _SCCM4UART_RX_POSITION         0x00000000
+#define _SCCM4UART_RX_MASK             0x00000001
+#define _SCCM4UART_RX_LENGTH           0x00000001
+
+#define _SCCM1ETH_GRA_POSITION         0x00000007
+#define _SCCM1ETH_GRA_MASK             0x00000001
+#define _SCCM1ETH_GRA_LENGTH           0x00000001
+
+#define _SCCM1ETH_TXE_POSITION         0x00000004
+#define _SCCM1ETH_TXE_MASK             0x00000001
+#define _SCCM1ETH_TXE_LENGTH           0x00000001
+
+#define _SCCM1ETH_RXF_POSITION         0x00000003
+#define _SCCM1ETH_RXF_MASK             0x00000001
+#define _SCCM1ETH_RXF_LENGTH           0x00000001
+
+#define _SCCM1ETH_BSY_POSITION         0x00000002
+#define _SCCM1ETH_BSY_MASK             0x00000001
+#define _SCCM1ETH_BSY_LENGTH           0x00000001
+
+#define _SCCM1ETH_TXB_POSITION         0x00000001
+#define _SCCM1ETH_TXB_MASK             0x00000001
+#define _SCCM1ETH_TXB_LENGTH           0x00000001
+
+#define _SCCM1ETH_RXB_POSITION         0x00000000
+#define _SCCM1ETH_RXB_MASK             0x00000001
+#define _SCCM1ETH_RXB_LENGTH           0x00000001
+
+#define _SCCM2ETH_GRA_POSITION         0x00000007
+#define _SCCM2ETH_GRA_MASK             0x00000001
+#define _SCCM2ETH_GRA_LENGTH           0x00000001
+
+#define _SCCM2ETH_TXE_POSITION         0x00000004
+#define _SCCM2ETH_TXE_MASK             0x00000001
+#define _SCCM2ETH_TXE_LENGTH           0x00000001
+
+#define _SCCM2ETH_RXF_POSITION         0x00000003
+#define _SCCM2ETH_RXF_MASK             0x00000001
+#define _SCCM2ETH_RXF_LENGTH           0x00000001
+
+#define _SCCM2ETH_BSY_POSITION         0x00000002
+#define _SCCM2ETH_BSY_MASK             0x00000001
+#define _SCCM2ETH_BSY_LENGTH           0x00000001
+
+#define _SCCM2ETH_TXB_POSITION         0x00000001
+#define _SCCM2ETH_TXB_MASK             0x00000001
+#define _SCCM2ETH_TXB_LENGTH           0x00000001
+
+#define _SCCM2ETH_RXB_POSITION         0x00000000
+#define _SCCM2ETH_RXB_MASK             0x00000001
+#define _SCCM2ETH_RXB_LENGTH           0x00000001
+
+#define _SCCM3ETH_GRA_POSITION         0x00000007
+#define _SCCM3ETH_GRA_MASK             0x00000001
+#define _SCCM3ETH_GRA_LENGTH           0x00000001
+
+#define _SCCM3ETH_TXE_POSITION         0x00000004
+#define _SCCM3ETH_TXE_MASK             0x00000001
+#define _SCCM3ETH_TXE_LENGTH           0x00000001
+
+#define _SCCM3ETH_RXF_POSITION         0x00000003
+#define _SCCM3ETH_RXF_MASK             0x00000001
+#define _SCCM3ETH_RXF_LENGTH           0x00000001
+
+#define _SCCM3ETH_BSY_POSITION         0x00000002
+#define _SCCM3ETH_BSY_MASK             0x00000001
+#define _SCCM3ETH_BSY_LENGTH           0x00000001
+
+#define _SCCM3ETH_TXB_POSITION         0x00000001
+#define _SCCM3ETH_TXB_MASK             0x00000001
+#define _SCCM3ETH_TXB_LENGTH           0x00000001
+
+#define _SCCM3ETH_RXB_POSITION         0x00000000
+#define _SCCM3ETH_RXB_MASK             0x00000001
+#define _SCCM3ETH_RXB_LENGTH           0x00000001
+
+#define _SCCM4ETH_GRA_POSITION         0x00000007
+#define _SCCM4ETH_GRA_MASK             0x00000001
+#define _SCCM4ETH_GRA_LENGTH           0x00000001
+
+#define _SCCM4ETH_TXE_POSITION         0x00000004
+#define _SCCM4ETH_TXE_MASK             0x00000001
+#define _SCCM4ETH_TXE_LENGTH           0x00000001
+
+#define _SCCM4ETH_RXF_POSITION         0x00000003
+#define _SCCM4ETH_RXF_MASK             0x00000001
+#define _SCCM4ETH_RXF_LENGTH           0x00000001
+
+#define _SCCM4ETH_BSY_POSITION         0x00000002
+#define _SCCM4ETH_BSY_MASK             0x00000001
+#define _SCCM4ETH_BSY_LENGTH           0x00000001
+
+#define _SCCM4ETH_TXB_POSITION         0x00000001
+#define _SCCM4ETH_TXB_MASK             0x00000001
+#define _SCCM4ETH_TXB_LENGTH           0x00000001
+
+#define _SCCM4ETH_RXB_POSITION         0x00000000
+#define _SCCM4ETH_RXB_MASK             0x00000001
+#define _SCCM4ETH_RXB_LENGTH           0x00000001
 
 #define _SCCS1_ID_POSITION             0x00000000
 #define _SCCS1_ID_MASK                 0x00000001
