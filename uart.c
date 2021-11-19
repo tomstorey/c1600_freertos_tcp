@@ -55,23 +55,23 @@ init_console_uart(void)
      * ((9629 - 9600) / 9600) * 1000 = +3.02%
      *
      * An absolute error rate of less than 5% is acceptable. */
-    BRGC1bits.RST = 1;          /* Reset the BRG */
+    BRGC2 = 1 << _BRGC2_RST_POSITION; /* Reset the BRG */
 
     if (SYSOPTbits.SPEED == 0) {
         /* Configure clock divider to produce the desired baud rate at 33MHz,
          * and enable the BRG */
-        BRGC1bits.CD = (FCY_33MHZ / (CONSOLE_BAUD * 16));
+        BRGC2bits.CD = (FCY_33MHZ / (CONSOLE_BAUD * 16));
     } else {
         /* Configure clock divider to produce the desired baud rate at 25MHz,
          * and enable the BRG */
-        BRGC1bits.CD = (FCY_25MHZ / (CONSOLE_BAUD * 16));
+        BRGC2bits.CD = (FCY_25MHZ / (CONSOLE_BAUD * 16));
     }
 
-    BRGC1bits.ATB = 0;
-    BRGC1bits.EN = 1;
+    BRGC2bits.ATB = 0;
+    BRGC2bits.EN = 1;
 
-    SIMODEbits.SMC1 = 0;        /* Connect BRG1 to SMC1 */
-    SIMODEbits.SMC1CS = 0;
+    SIMODEbits.SMC1 = 0;        /* Connect BRG2 to SMC1 */
+    SIMODEbits.SMC1CS = 1;
 
     /* Set buffer descriptor pointers */
     SMC1RBASE = (uint16_t)((uint32_t)rxbd);
