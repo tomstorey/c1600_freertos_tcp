@@ -14,7 +14,7 @@
 # The compiler will automatically choose the correct source file (.c, .s etc)
 # according to the object file (.o) to be created.
 OBJ=hardware_init_hook.o main.o uart.o PITInterruptHandler.o
-OBJ+= exceptions_asm.o exceptions_c.o
+OBJ+= exceptions_asm.o exceptions_c.o assert.o
 
 OBJ+= FreeRTOS-Kernel/portable/GCC/m68k/port.o FreeRTOS-Kernel/portable/GCC/m68k/portasm.o
 OBJ+= FreeRTOS-Kernel/tasks.o FreeRTOS-Kernel/queue.o FreeRTOS-Kernel/list.o
@@ -27,7 +27,7 @@ OBJ+= FreeRTOS-Plus-TCP/FreeRTOS_Sockets.o FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.o
 OBJ+= FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.o FreeRTOS-Plus-TCP/FreeRTOS_TCP_WIN.o
 OBJ+= FreeRTOS-Plus-TCP/portable/BufferManagement/BufferAllocation_1.o
 OBJ+= FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.o
-OBJ+= FreeRTOS-Plus-TCP/portable/NetworkInterface/C1600-QUICC/SCC3InterruptHandler.o
+OBJ+= FreeRTOS-Plus-TCP/portable/NetworkInterface/C1600-QUICC/SCC1InterruptHandler.o
 OBJ+= FreeRTOS-Plus-TCP/portable/NetworkInterface/C1600-QUICC/NetworkInterface.o
 
 # Specify the CPU type that you are targeting your build towards.
