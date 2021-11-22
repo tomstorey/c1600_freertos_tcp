@@ -49,7 +49,7 @@ void
 init_ports(void)
 {
     /*
-     * Default configuration for ports
+     * Default configuration for ports - all ports start as inputs
      */
     PAPAR = 0;
     PBPAR = 0;
@@ -61,6 +61,10 @@ init_ports(void)
 
     PAODR = 0;
     PBODR = 0;
+
+    PADAT = 0;
+    PBDAT = 0;
+    PCDAT = 0;
 }
 
 void
@@ -204,12 +208,16 @@ init_others(void)
     /*
      * Initialise other registers
      */
-    SYPCR = 0x47;               /* Enables bus monitor, disable dog */
+    SWIV = 0x41;
+    PITRbits.SWP = 0;
+    SYPCR = 0x97;               /* Enables bus monitor and SWT for IRQ */
+
+
     SDCR = 0x0740;              /* Recommended by User Manual */
 
-    CICR = 0x390001;            /* SCC priorities and spreading */
+    CICR = 0x00270001;          /* SCC priorities and spreading */
     CICRbits.IRL = 2;           /* CPM IRQ level */
-    CICRbits.HP = 0b11111;      /* Highest priority interrupt is PORTC */
+    CICRbits.HP = 0b00100;      /* Highest priority interrupt is SMC1 */
     CICRbits.VBA = 0b111;       /* Upper 3 bits of CPM interrupt vector */
     
     CR = 0x8001;                /* Reset the CP */
@@ -218,4 +226,8 @@ init_others(void)
     CIMR = 0;
     CIPR = 0xFFFFFFFF;
     CISR = 0xFFFFFFFF;
+
+    /* Enable interrupts from the WIC slot */
+    INTSRC = 0;                 /* Write anything to clear source bits */
+    INTCON = 0xFE;
 }

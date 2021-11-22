@@ -10,8 +10,5 @@ __assert_fail(const char* expr, const char* file, unsigned int line, const char*
 
     printf("Assertion failed: %s (%s: %s: %u)\r\n", expr, file, function, line);
 
-    /* Now, since interrupts are disabled, manually flush the tx buffer */
-    uart_flush();
-
     while (true);
 }

@@ -142,6 +142,9 @@ SECTIONS {
         /* 0x40: Interrupt vector for the PIT, used for FreeRTOS ticks */
         LONG(ABSOLUTE(PITInterruptHandler));
 
+        /* 0x41: Software Watchdog Timer interrupt */
+        LONG(ABSOLUTE(SoftwareWatchdogInterruptHandler));
+
         /* 0xE0-FF: Communication Processor Module (CPM) */
         . = 0x380;
         LONG(DEFINED(CPMErrorHandler) ? ABSOLUTE(CPMErrorHandler) : ABSOLUTE(__DefaultInterrupt));

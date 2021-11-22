@@ -589,8 +589,6 @@ Exception_Handler(void)
     printf("\r\nDump surrounding stack pointer:\r\n");
     hex_dump((uint8_t *)active_sp - 16, 32, 1);
 
-    uart_flush();
-
     while (true);
 }
 
