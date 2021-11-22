@@ -415,6 +415,7 @@ typedef struct {
     void *SRC;
 } __SCCUARTTxBufferDescriptor_t;
 
+/* TODO: Find the location of the M bit, which is missing in the datasheet */
 typedef struct {
     union {
         struct {
@@ -443,9 +444,9 @@ typedef struct {
 typedef struct {
     union {
         struct {
-            uint16_t R:1;       /** Ready: 1=Buffer is ready to transmit */
-            uint16_t PAD:1;     /** Pad: 1=Pad short frames until length == MINFLR */
-            uint16_t W:1;       /** Wrap: 1=This is the las BD in the ring */
+            uint16_t R:1;
+            uint16_t PAD:1;
+            uint16_t W:1;
             uint16_t I:1;
             uint16_t L:1;
             uint16_t TC:1;
@@ -547,8 +548,8 @@ typedef struct {
 #define SCC1TADDR_H (*(volatile uint16_t *)(SCC1BASE + 0xA2))
 
 
-/* TODO: MISCBASE */
-
+/* RISC Microcode Revision */
+#define RISCREVNUM (*(volatile uint16_t *)(MISCBASE))
 
 /* SCC2 */
 #define SCC2RBASE (*(volatile uint16_t *)(SCC2BASE))
@@ -3333,6 +3334,47 @@ typedef union {
 #define SICR (REGB + 0x6EC)
 
 #endif /* __ASSEMBLER__ */
+
+#define _CR_CHNUM_SCC1 0
+#define _CR_CHNUM_SCC2 0x4
+#define _CR_CHNUM_SPI 0x5
+#define _CR_CHNUM_RISCTIMERS 0x5
+#define _CR_CHNUM_SCC3 0x8
+#define _CR_CHNUM_SMC1 0x9
+#define _CR_CHNUM_IDMA1 0x9
+#define _CR_CHNUM_SCC4 0xC
+#define _CR_CHNUM_SMC2 0xD
+#define _CR_CHNUM_IDMA2 0xD
+
+#define _CR_OPCODE_SCC_INIT_TX_RX_PARAMS 0
+#define _CR_OPCODE_SCC_INIT_RX_PARAMS 0x1
+#define _CR_OPCODE_SCC_INIT_TX_PARAMS 0x2
+#define _CR_OPCODE_SCC_ENTER_HUNT_MODE 0x3
+#define _CR_OPCODE_SCC_STOP_TX 0x4
+#define _CR_OPCODE_SCC_GR_STOP_TX 0x5
+#define _CR_OPCODE_SCC_RESTART_TX 0x6
+#define _CR_OPCODE_SCC_CLOSE_RX_BD 0x7
+#define _CR_OPCODE_SCC_SET_GROUP_ADDR 0x8
+#define _CR_OPCODE_SCC_RESET_BCS 0xA
+
+#define _CR_OPCODE_SMC_INIT_TX_RX_PARAMS 0
+#define _CR_OPCODE_SMC_INIT_RX_PARAMS 0x1
+#define _CR_OPCODE_SMC_INIT_TX_PARAMS 0x2
+#define _CR_OPCODE_SMC_ENTER_HUNT_MODE 0x3
+#define _CR_OPCODE_SMC_STOP_TX 0x4
+#define _CR_OPCODE_SMC_RESTART_TX 0x6
+#define _CR_OPCODE_SMC_CLOSE_RX_BD 0x7
+#define _CR_OPCODE_SMC_GCI_TIMEOUT 0x9
+#define _CR_OPCODE_SMC_GCI_ABORT 0xA
+
+#define _CR_OPCODE_SPI_INIT_TX_RX_PARAMS 0
+#define _CR_OPCODE_SPI_INIT_RX_PARAMS 0x1
+#define _CR_OPCODE_SPI_INIT_TX_PARAMS 0x2
+#define _CR_OPCODE_SPI_CLOSE_RX_BD 0x7
+
+#define _CR_OPCODE_IDMA_INIT 0x5
+
+#define _CR_OPCODE_TIMER_SET 0x8
 
 #define _SYSOPT_HWREV3_POSITION        0x00000007
 #define _SYSOPT_HWREV3_MASK            0x00000001
