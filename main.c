@@ -17,7 +17,7 @@ static TaskHandle_t task_handle5 = NULL;
 void
 vApplicationSetupInterrupts(void)
 {
-    /* Configure a timer to generate tick interrupt */
+    /* Configure a timer to generate FreeRTOS tick interrupt */
     PICRbits.PIRQL = 1;         /* IRQ 1 */
     PICRbits.PIV = 0x40;        /* Vector 0x40 */
     PITRbits.CTR = 0x4E;        /* Approx 10ms */
@@ -37,6 +37,23 @@ vApplicationStackOverflowHook(TaskHandle_t xTask, char * pcTaskName)
     /* TODO */ 
     printf("vApplicationStackOverflowHook() %s\r\n", pcTaskName);
 }
+
+
+int
+dbgprintf(const char * format, ...)
+{
+    int result;
+    va_list args;
+
+    va_start(args, format);
+    result = vprintf(format, args);
+    va_end(args);
+    printf("\r");
+
+    return result;
+}
+
+
 
 static void
 task1(void *param)
@@ -126,6 +143,8 @@ read_mac_from_cisco_cookie(void)
 int
 main(void)
 {
+    printf("RISC revision: %04X\r\n", RISCREVNUM);
+
     /* Create some tasks */
     xTaskCreate(task1, "Task 1", configMINIMAL_STACK_SIZE, NULL, 1, &task_handle1);
     xTaskCreate(task2, "Task 2", configMINIMAL_STACK_SIZE, NULL, 2, &task_handle2);
@@ -145,6 +164,8 @@ main(void)
     printf("Board MAC: %04X.%04X.%04X\r\n", *(uint16_t *)ucMACAddress,
                                             *(uint16_t *)(ucMACAddress+2),
                                             *(uint16_t *)(ucMACAddress+4));
+    printf("Board IP: %d.%d.%d.%d\r\n", ucIPAddress[0], ucIPAddress[1],
+                                        ucIPAddress[2], ucIPAddress[3]);
 
     if (FreeRTOS_IPInit(ucIPAddress, ucNetMask, ucGatewayAddress,
                         ucDNSServerAddress, ucMACAddress) != pdTRUE) {

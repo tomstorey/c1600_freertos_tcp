@@ -1,14 +1,14 @@
 #ifndef FREERTOSCONFIG_H
 #define	FREERTOSCONFIG_H
 
-// #ifndef __ASSEMBLER__
-
-// #include "../include/assert.h"
-
-// #define configASSERT assert
-// #define configCHECK_FOR_STACK_OVERFLOW 2
-
-// #endif /* __ASSEMBLER__ */
+//#ifndef __ASSEMBLER__
+//
+//#include "../include/assert.h"
+//
+//#define configASSERT assert
+//#define configCHECK_FOR_STACK_OVERFLOW 2
+//
+//#endif /* __ASSEMBLER__ */
 
 #define configUSE_PREEMPTION 1
 #define configTICK_RATE_HZ ((TickType_t)100)
