@@ -34,7 +34,7 @@
 
 /* Hook function related definitions. */
 #define configUSE_IDLE_HOOK 0
-#define configUSE_TICK_HOOK 1
+#define configUSE_TICK_HOOK 0
 
 /* Software timer related definitions. */
 #define configUSE_TIMERS 1
