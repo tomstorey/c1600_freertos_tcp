@@ -25,19 +25,6 @@ vApplicationSetupInterrupts(void)
     portENABLE_INTERRUPTS();
 }
 
-void
-vApplicationTickHook(void)
-{
-    // LEDCRbits.REAROK ^= 1;
-}
-
-void
-vApplicationStackOverflowHook(TaskHandle_t xTask, char * pcTaskName)
-{
-    /* TODO */ 
-    printf("vApplicationStackOverflowHook() %s\r\n", pcTaskName);
-}
-
 
 int
 dbgprintf(const char * format, ...)
@@ -52,7 +39,6 @@ dbgprintf(const char * format, ...)
 
     return result;
 }
-
 
 
 static void
@@ -106,9 +92,6 @@ task5(void *param)
 }
 
 
-
-
-
 uint8_t *
 read_mac_from_cisco_cookie(void)
 {
@@ -134,10 +117,6 @@ read_mac_from_cisco_cookie(void)
     /* Return pointer to MAC address within cookie */
     return (uint8_t *)0x0E000004;
 }
-
-
-
-
 
 
 int
@@ -195,12 +174,6 @@ main(void)
 
     return 0;
 }
-
-
-
-
-
-
 
 
 BaseType_t
