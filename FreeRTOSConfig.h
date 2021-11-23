@@ -1,14 +1,14 @@
 #ifndef FREERTOSCONFIG_H
 #define	FREERTOSCONFIG_H
 
-//#ifndef __ASSEMBLER__
-//
-//#include "../include/assert.h"
-//
-//#define configASSERT assert
-//#define configCHECK_FOR_STACK_OVERFLOW 2
-//
-//#endif /* __ASSEMBLER__ */
+// #ifndef __ASSEMBLER__
+
+// #include "../include/assert.h"
+
+// #define configASSERT assert
+// #define configCHECK_FOR_STACK_OVERFLOW 2
+
+// #endif /* __ASSEMBLER__ */
 
 #define configUSE_PREEMPTION 1
 #define configTICK_RATE_HZ ((TickType_t)100)
@@ -46,8 +46,8 @@
  * interrupts when re-entering kernel priority. The CPM is configured to use
  * IRQ2, so the API priority is 2. This prevents ticks from interrupting ISRs
  * that are in progress. */
-#define configKERNEL_INTERRUPT_PRIORITY 0x0
-#define configMAX_API_CALL_INTERRUPT_PRIORITY 0x2
+#define configKERNEL_INTERRUPT_PRIORITY 0x1
+#define configMAX_API_CALL_INTERRUPT_PRIORITY 0x4
 
 /* Optional functions */
 #define INCLUDE_vTaskDelay 1
