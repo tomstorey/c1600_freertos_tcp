@@ -2,8 +2,7 @@
 
 #include "FreeRTOSConfig.h"
 
-#define KERNEL_IPL_INV_MASK ((~configKERNEL_INTERRUPT_PRIORITY & 0x7) << 8)
-#define API_IPL_INV_MASK ((~configMAX_API_CALL_INTERRUPT_PRIORITY & 0x7) << 8)
+#define API_IPL (0x2000 + (configMAX_API_CALL_INTERRUPT_PRIORITY << 8))
 
         .extern xTaskIncrementTick
         .extern vTaskSwitchContext
@@ -15,8 +14,7 @@
         .globl PITInterruptHandler
 PITInterruptHandler:
         /* Mask interrupts to the API priority level */
-        ori.w   #0x0700, %sr
-        eori.w  #API_IPL_INV_MASK, %sr
+        move.w  #API_IPL, %sr
 
         /* Save current task context */
         movem.l %d0-%fp, %sp@-
