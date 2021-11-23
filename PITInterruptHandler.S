@@ -31,6 +31,7 @@ PITInterruptHandler:
         jsr     xTaskIncrementTick
 
         /* If a task switch is required, do it */
+        move.l  %d0, %d0
         beq     0f
         jsr     vTaskSwitchContext
 
