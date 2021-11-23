@@ -31,11 +31,11 @@ extern int dbgprintf(const char * format, ...);
  * enforced, simply due to limitations of the amount of contiguous parameter
  * RAM available for storing the buffer descriptors while also leaving space
  * for other peripherals. */
-#define ipconfigQUICC_RX_RING_SZ 16
-#define ipconfigQUICC_TX_RING_SZ 8
+#define ipconfigQUICC_RX_RING_SZ 8
+#define ipconfigQUICC_TX_RING_SZ 4
 #define ipconfigQUICC_BUFFERS_EXTRA 16
 
-#define ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS ((ipconfigQUICC_RX_RING_SZ + ipconfigQUICC_TX_RING_SZ + ipconfigQUICC_BUFFERS_EXTRA) * 2)
+#define ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS (ipconfigQUICC_RX_RING_SZ + ipconfigQUICC_TX_RING_SZ + ipconfigQUICC_BUFFERS_EXTRA)
 #define ipconfigEVENT_QUEUE_LENGTH (ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS + 16)
 
 /* IP task properties */
