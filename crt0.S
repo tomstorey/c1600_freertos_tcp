@@ -51,7 +51,7 @@ _start:
         dbf     %d0, 0b
 
         /* Make sure Breakpoint Control Register is cleared */
-        clr.l   BKCR                    /* BKCR */
+        clr.l   (BKCR)
 
         /* If using a CPU with a VBR, point it to the beginning of ROM */
         movea.l #_rom_base, %a0
