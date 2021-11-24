@@ -43,7 +43,7 @@ _start:
         moves.l %d0, (0x3FF00)
 
         /* Zeroise internal dual-port RAM that will be used for stack */
-        move.l  #0x3FF, %d0
+        move.l  #0xFF, %d0
         clr.l   %d1
         movea.l #MODULE_BASE, %a0
 
