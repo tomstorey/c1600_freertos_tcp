@@ -87,18 +87,6 @@ _start:
         .weak __DefaultInterrupt
         .globl __DefaultInterrupt
 __DefaultInterrupt:
-        ori.w   #0x0700, %sr
-        move.l  #50000, %d0
-
-        move.b  #0, (LEDCR)
-
-0:      eori.b  #0xFF, (LEDCR)
-        move.l  %d0, %d1
-
-1:      dbf     %d1, 1b
-
-        bra     0b
-
         stop    #0x2700
         bra     .
 
